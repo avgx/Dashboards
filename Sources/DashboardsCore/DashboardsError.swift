@@ -1,0 +1,6 @@
+import Foundation
+
+public enum DashboardsError: Error {
+    case unknown
+    case invalidStatusCode
+}
