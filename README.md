@@ -29,3 +29,16 @@ import DashboardsUI
 ```
 
 ## Usage
+
+## Test
+Create .env file with
+```
+API=https://cloud.url.com/
+TOKEN=eyJhbGciO...mnH8ag
+```
+
+One liner run:
+```
+(source .env && xcodebuild test -scheme "Dashboards-Package" -destination 'platform=iOS Simulator,name=iPhone 16e,OS=26.0')
+```
+Or add environment variables via XCode "Edit scheme..." menu item. 

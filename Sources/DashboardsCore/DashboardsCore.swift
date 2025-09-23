@@ -19,15 +19,12 @@ public class DashboardsCore: ObservableObject {
     public func connect(api: URL, token: String) async throws {
         var request = URLRequest(url: api)
         request.addValue("Bearer: \(token)", forHTTPHeaderField: "Authorization")
-        let (data, httpResponse) = try await URLSession.shared.data(for: request)
-        
-        print(httpResponse)
-        print(data)
+        let (_, httpResponse) = try await URLSession.shared.data(for: request)
         
         guard let response = httpResponse as? HTTPURLResponse else {
             throw DashboardsError.unknown
         }
-        let statusCode = response.statusCode ?? 0
+        let statusCode = response.statusCode
         guard (200..<300).contains(statusCode) else {
             throw DashboardsError.invalidStatusCode
         }
