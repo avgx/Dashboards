@@ -10,8 +10,16 @@ let package = Package(
         .library(name: "DashboardsCore", targets: ["DashboardsCore"]),
         .library(name: "DashboardsUI", targets: ["DashboardsUI"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/avgx/Get", branch: "main")
+    ],
     targets: [
-        .target(name: "DashboardsCore"),
+        .target(
+            name: "DashboardsCore",
+            dependencies: [
+                .product(name: "Get", package: "Get")
+            ]
+        ),
         .target(name: "DashboardsUI", dependencies: ["DashboardsCore"]),
         .testTarget(name: "DashboardsTests", dependencies: ["DashboardsCore"]
         ),
