@@ -2,22 +2,26 @@ import Foundation
 import Get
 
 class DefaultNetworkService: NetworkServiceProtocol {
+    private let client: HttpClient5
     
-    private var http: HttpClient5?
-    
-    init(baseURL: URL, token: String) {
-        self.http = HttpClient5(baseURL: baseURL, authorization: .bearer(token))
+    init(client: HttpClient5) {
+        self.client = client
     }
     
     func connect() async throws {
-        _ = try await http?.send(DashboardsAPI.connect())
+        try await client.send(DashboardsAPI.connect())
     }
     
-    func dashboards() async throws -> [Dashboard] {
-        guard let http = http else {
-            throw DashboardsError.notConnected
-        }
-        return try await http.send(DashboardsAPI.dashboards()).value
+    func fetchDashboards() async throws -> Response<[Dashboard]> {
+        try await client.send(DashboardsAPI.dashboards())
+    }
+    
+    func fetchEventFields(lang: String) async throws -> Response<[EventField]> {
+        try await client.send(DashboardsAPI.fields(lang: lang))
+    }
+    
+    func fetchEventTables(lang: String) async throws -> Response<[EventTable]> {
+        try await client.send(DashboardsAPI.tables(lang: lang))
     }
     
 }

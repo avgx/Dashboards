@@ -6,29 +6,56 @@ extension URL {
 }
 
 @MainActor
-public class DashboardsCore: DashboardsCoreProtocol, ObservableObject {
+public class DashboardsCore: ObservableObject {
     public static let shared = DashboardsCore()
     
-    @Published public private(set) var dashboards: [Dashboard] = []
+    @Published public private(set) var dashboards: Resource<[Dashboard]> = .pending
+    @Published public private(set) var eventFields: Resource<[EventField]> = .pending
+    @Published public private(set) var eventTables: Resource<[EventTable]> = .pending
     @Published public private(set) var isConnected: Bool = false
+    @Published public private(set) var isLoaded: Bool = false
     
     private var networkService: NetworkServiceProtocol
     
-    internal init(networkService: NetworkServiceProtocol = DefaultNetworkService(baseURL: URL(string: "https://default.com") ?? URL(string: "https://")!, token: "")) {
-        self.networkService = networkService
+    private init() {
+        self.networkService = DefaultNetworkService(client: HttpClient5(baseURL: .invalid, authorization: .bearer("")))
     }
     
     public func connect(api: URL, token: String) async throws {
-        self.networkService = DefaultNetworkService(baseURL: api, token: token)
-        try await networkService.connect()
-        self.isConnected = true
+        let client = HttpClient5(baseURL: api, authorization: .bearer(token))
+        self.networkService = DefaultNetworkService(client: client)
+        do {
+            try await networkService.connect()
+            self.isConnected = true
+            
+            try await initialFetch()
+            self.isLoaded = true
+        } catch {
+            self.dashboards = .error(error)
+            self.eventFields = .error(error)
+            self.eventTables = .error(error)
+            throw error
+        }
     }
     
-    public func fetchDashboards() async throws {
-        guard isConnected else {
-            throw DashboardsError.notConnected
+    private func initialFetch() async throws {
+        self.dashboards = .loading
+        self.eventFields = .loading
+        self.eventTables = .loading
+        
+        do {
+            let dashboard = try await networkService.fetchDashboards()
+            let fields = try await networkService.fetchEventFields(lang: "en")
+            let tables = try await networkService.fetchEventTables(lang: "en")
+            
+            self.dashboards = .success(dashboard.value)
+            self.eventFields = .success(fields.value)
+            self.eventTables = .success(tables.value)
+        } catch {
+            self.dashboards = .error(error)
+            self.eventFields = .error(error)
+            self.eventTables = .error(error)
+            throw error
         }
-        let dashboards = try await networkService.dashboards()
-        self.dashboards = dashboards
     }
 }

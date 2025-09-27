@@ -1,6 +1,9 @@
 import Foundation
+import Get
 
-protocol NetworkServiceProtocol {
+public protocol NetworkServiceProtocol {
     func connect() async throws
-    func dashboards() async throws -> [Dashboard]
+    func fetchDashboards() async throws -> Response<[Dashboard]>
+    func fetchEventFields(lang: String) async throws -> Response<[EventField]>
+    func fetchEventTables(lang: String) async throws -> Response<[EventTable]>
 }

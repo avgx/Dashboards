@@ -21,7 +21,7 @@ let package = Package(
             ]
         ),
         .target(name: "DashboardsUI", dependencies: ["DashboardsCore"]),
-        .testTarget(name: "DashboardsTests", dependencies: ["DashboardsCore"]
+        .testTarget(name: "DashboardsCoreTests", dependencies: ["DashboardsCore"], resources: [.process("Resources")]
         ),
     ]
 )

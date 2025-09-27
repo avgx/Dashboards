@@ -1,0 +1,47 @@
+{
+    "id": "0978ca92-7794-40c0-b887-4001ee4e79f4",
+    "title": "все чеки по кредитным, дисконтным картам",
+    "version": 1,
+    "owner": true,
+    "serviceMode": true,
+    "widgets": [
+        {
+            "id": "widget_map",
+            "isQL": false,
+            "title": "География продаж",
+            "widget": "Map",
+            "ignoreCommonFilter": true,
+            "query": {
+                "view": "fields",
+                "table": "pos_events",
+                "fields": [
+                    { "field": "pos.event.location.lat" },
+                    { "field": "pos.event.location.lon" },
+                    { "field": "pos.event.payment.total" }
+                ],
+                "filter": {
+                    "period": { "type": "this_week" },
+                    "clauses": []
+                }
+            },
+            "visualization": {
+                "hidden": [],
+                "nested": {
+                    "layout": {
+                        "lg": []
+                    },
+                    "widgets": {}
+                },
+                "autoplay": false,
+                "domainId": "49",
+                "qlFilters": [],
+                "noDataLink": "",
+                "noDataValue": "No matching data. Try softer filter conditions.",
+                "rowsPerPage": 15,
+                "noDataFormat": "text",
+                "virtualFields": [],
+                "archiveEnabled": false
+            }
+        }
+    ]
+}
