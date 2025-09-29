@@ -2,8 +2,6 @@ import Foundation
 
 public typealias Dashboards = [Dashboard]
 
-import Foundation
-
 public struct Dashboard: Codable, Identifiable, Sendable, Equatable {
     public let id: String
     public var title: String

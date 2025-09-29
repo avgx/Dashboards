@@ -5,9 +5,9 @@ public struct Visualization: Codable, Sendable {
     public let op: [String]?
     public let field: [String]?
     public let fields: [String]?
-    public let noDataLink: String?        // <- стало опциональным
-    public let noDataValue: String?       // <- стало опциональным
-    public let noDataFormat: String?      // <- стало опциональным
+    public let noDataLink: String?
+    public let noDataValue: String?
+    public let noDataFormat: String? 
     public let rowsPerPage: String?
     public let virtualFields: [String?]?
     public let autoplay: Bool?
