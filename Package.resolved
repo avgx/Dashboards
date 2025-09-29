@@ -1,0 +1,33 @@
+{
+  "originHash" : "266db6bf48d70b81fcf935a01df2a19347d6e7cc59d0fc592d8b239e24361291",
+  "pins" : [
+    {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/avgx/Get",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f04ba06154bb8b4df2a88141b72974cbbb7d441e"
+      }
+    },
+    {
+      "identity" : "pulse",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/avgx/Pulse.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bb44a04507b463fc5f28c73871703d854a23a2ae"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
+        "version" : "1.6.4"
+      }
+    }
+  ],
+  "version" : 3
+}
