@@ -158,4 +158,17 @@ struct DashboardsCoreDeserializationWidgetTests {
         #expect(decoded.visualization?.noDataFormat == "text", "Map widget must be multiple")
         #expect(decoded.visualization?.archiveEnabled == false, "Map widget must be multiple")
     }
+    
+    @Test func testDashboardSimpleWithTableWidgetWithQuery() throws {
+        let jsonData = bin_data(fromFile: "DashboardSimpleWithTableWidgeAndQuery", ext: "json")!
+        let decoded = try JSONDecoder().decode(Dashboard.self, from: jsonData).widgets[0]
+        
+        #expect(decoded.widget == "EventsTable", "Table widget must be multiple")
+        #expect(decoded.query?.view == "fields", "Table widget must be multiple")
+        #expect(decoded.query?.table == "pos_events", "Table widget must be multiple")
+        #expect(decoded.query?.fields[0].field == "pos.event.document", "Table widget must be multiple")
+        #expect(decoded.query?.fields[1].field == "time.datetime", "Table widget must be multiple")
+        #expect(decoded.query?.fields[2].field == "pos.event.cashier", "Table widget must be multiple")
+        #expect(decoded.query?.filter?.period?.type.rawValue == "today", "Table widget must be multiple")
+    }
 }

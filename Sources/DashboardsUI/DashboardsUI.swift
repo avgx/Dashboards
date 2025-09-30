@@ -14,13 +14,15 @@ public struct DashboardsUI: View {
                 .navigationTitle("Dashboards")
                 .task {
                     if !core.isConnected {
-                        try? await core.connect(api: URL(string: "https://bezeq-pos1.axxoncloud.com/")!, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjMsIkNsaWVudElEIjoiZGNkNzAzNTE4YWFiMDM0MGZmOWI4MzEwMGEwOTZkNWMiLCJUeXBlIjoiYWNjZXNzVG9rZW4iLCJWZXJzaW9uIjoidjIiLCJDcmVhdGVkQXQiOiIyMDI1LTA5LTI5VDA5OjAzOjI4LjU0MDg5NjM1MloiLCJleHAiOjE3NTkyMjMwMDgsImlhdCI6MTc1OTEzNjYwOCwiaXNzIjoiQ2xvdWQifQ.V8qgUjBomrnh9g3FaEZlw4zzZc7viQJUzNhh_Bru-eU")
+                        try? await core.connect(
+                            api: URL(string: Environment.get("API", defaultValue: "https://my...cloud.com/"))!,
+                            token: Environment.get("TOKEN", defaultValue: "eyJhbGciOiJIUzI1NiIsInR5cC...hG9o8ptyyqNOSenS3GXmnH8ag"))
                     }
                 }
         }
     }
     
-    @ViewBuilder
+    @ViewBuilder 
     private var content: some View {
         if !core.isConnected {
             LoadingView(message: "Connecting...")
@@ -33,7 +35,9 @@ public struct DashboardsUI: View {
             case .error(let error):
                 ErrorView(error: error) {
                     Task {
-                        try? await core.connect(api: URL(string: "https://bezeq-pos1.axxoncloud.com/")!, token: "TOKEN")
+                        try? await core.connect(
+                            api: URL(string: Environment.get("API", defaultValue: "https://my...cloud.com/"))!,
+                            token: Environment.get("TOKEN", defaultValue: "eyJhbGciOiJIUzI1NiIsInR5cC...hG9o8ptyyqNOSenS3GXmnH8ag"))
                     }
                 }
             case .success(let dashboards):
@@ -45,7 +49,7 @@ public struct DashboardsUI: View {
             }
         }
     }
-
+    
 }
 
 @available(iOS 16.0, *)

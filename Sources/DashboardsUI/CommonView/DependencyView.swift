@@ -7,8 +7,12 @@ struct DependencyView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("• Field: \(dependency.field)")
-            Text("  Translation: \(dependency.translation)")
+            Text("Field: \(dependency.field)")
+            
+            if let translation = dependency.translation, !translation.isEmpty {
+                Text("Translation: \(translation)")
+            }
+          
         }
         .font(.caption)
         .foregroundColor(.secondary)

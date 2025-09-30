@@ -30,13 +30,7 @@ struct DashboardDetailsView: View {
                         
                         ForEach(dashboard.widgets) { widget in
                             VStack(alignment: .leading, spacing: 6) {
-                                Text(widget.title)
-                                    .font(.subheadline)
-                                    .bold()
-                                
-                                Text(widget.widget)
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                WidgetView(widget: widget)
                                 
                                 if let dependencies = widget.dependOn, !dependencies.isEmpty {
                                     VStack(alignment: .leading, spacing: 4) {
