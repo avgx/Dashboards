@@ -12,17 +12,10 @@ public struct DashboardsUI: View {
         NavigationStack {
             content
                 .navigationTitle("Dashboards")
-                .task {
-                    if !core.isConnected {
-                        try? await core.connect(
-                            api: URL(string: Environment.get("API", defaultValue: "https://my...cloud.com/"))!,
-                            token: Environment.get("TOKEN", defaultValue: "eyJhbGciOiJIUzI1NiIsInR5cC...hG9o8ptyyqNOSenS3GXmnH8ag"))
-                    }
-                }
         }
     }
     
-    @ViewBuilder 
+    @ViewBuilder
     private var content: some View {
         if !core.isConnected {
             LoadingView(message: "Connecting...")
@@ -35,9 +28,7 @@ public struct DashboardsUI: View {
             case .error(let error):
                 ErrorView(error: error) {
                     Task {
-                        try? await core.connect(
-                            api: URL(string: Environment.get("API", defaultValue: "https://my...cloud.com/"))!,
-                            token: Environment.get("TOKEN", defaultValue: "eyJhbGciOiJIUzI1NiIsInR5cC...hG9o8ptyyqNOSenS3GXmnH8ag"))
+                        try? await core.retry()
                     }
                 }
             case .success(let dashboards):
@@ -54,6 +45,16 @@ public struct DashboardsUI: View {
 
 @available(iOS 16.0, *)
 #Preview {
+    let core = DashboardsCore.shared
     DashboardsUI()
-        .environmentObject(DashboardsCore.shared)
+        .environmentObject(core)
+        .onAppear {
+            Task {
+                if !core.isConnected {
+                    try? await core.connect(
+                        api: URL(string: ProcessInfo.processInfo.environment["API"]!)!,
+                        token: ProcessInfo.processInfo.environment["TOKEN"]!)
+                }
+            }
+        }
 }
