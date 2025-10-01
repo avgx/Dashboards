@@ -16,25 +16,30 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var isLoaded: Bool = false
     
     private var networkService: NetworkServiceProtocol
-    private(set) var lastAPI: URL?
-    private(set) var lastToken: String?
-    
+
     private init() {
         self.networkService = DefaultNetworkService(client: HttpClient5(baseURL: .invalid, authorization: .bearer("")))
     }
     
-    public func connect(api: URL, token: String) async throws {
-        self.lastAPI = api
-        self.lastToken = token
-        
+    public func set(api: URL, token: String) {
         let client = HttpClient5(baseURL: api, authorization: .bearer(token))
         self.networkService = DefaultNetworkService(client: client)
+    }
+    
+    public func connect() async throws {
+        self.isConnected = false
+        self.isLoaded = false
+        self.dashboards = .pending
+        self.eventFields = .pending
+        self.eventTables = .pending
+        
         do {
             try await networkService.connect()
             self.isConnected = true
             
             try await initialFetch()
             self.isLoaded = true
+            
         } catch {
             self.isConnected = false
             self.isLoaded = false
@@ -47,10 +52,7 @@ public class DashboardsCore: ObservableObject {
     }
     
     public func retry() async throws{
-        guard let api = lastAPI, let token = lastToken else {
-            throw DashboardsError.missingCredentials
-        }
-        try await connect(api: api, token: token)
+        try await connect()
     }
     
     private func initialFetch() async throws {

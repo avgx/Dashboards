@@ -46,14 +46,15 @@ public struct DashboardsUI: View {
 @available(iOS 16.0, *)
 #Preview {
     let core = DashboardsCore.shared
+    
     DashboardsUI()
         .environmentObject(core)
         .onAppear {
+            core.set(api: URL(string: ProcessInfo.processInfo.environment["API"]!)!,
+                     token: ProcessInfo.processInfo.environment["TOKEN"]!)
             Task {
                 if !core.isConnected {
-                    try? await core.connect(
-                        api: URL(string: ProcessInfo.processInfo.environment["API"]!)!,
-                        token: ProcessInfo.processInfo.environment["TOKEN"]!)
+                    try? await core.connect()
                 }
             }
         }
