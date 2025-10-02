@@ -1,0 +1,57 @@
+{
+    "commonFilter": true,
+    "commonFilterValue": {
+        "fields": [
+            "pos.event.cashier",
+            "pos.event.pos_name"
+        ],
+        "period": {
+            "type": "this_month"
+        },
+        "clauses": [],
+        "periods": [],
+        "quickFilters": {
+            "8LL7pEu6vo3CrIrUIo2N21HTLcvIs-B5CeCj": {
+                "id": "8LL7pEu6vo3CrIrUIo2N21HTLcvIs-B5CeCj",
+                "op": "eq",
+                "field": "pos.event.cashier",
+                "value": ["8369"]
+            },
+            "Vli7Gp-RbsK53NHtMk6fu7FV2pdeX4VDWIk5": {
+                "id": "Vli7Gp-RbsK53NHtMk6fu7FV2pdeX4VDWIk5",
+                "op": "eq",
+                "field": "pos.event.cashier",
+                "value": ["4760"]
+            }
+        },
+        "customFieldsNames": {
+            "cloud.domain": "АЗС",
+            "pos.event.pos_name": "Касса",
+            "pos.event.function_name": "Наименование события"
+        }
+    },
+    "id": "0978ca92-7794-40c0-b887-4001ee4e79f4",
+    "title": "все чеки по кредитным, дисконтным картам",
+    "version": 1,
+    "owner": true,
+    "serviceMode": true,
+    "widgets": [
+        {
+            "id": "widget_camera",
+            "isQL": false,
+            "title": "Камера кассы",
+            "widget": "Camera",
+            "ignoreCommonFilter": false,
+            "query": {
+                "view": "fields",
+                "table": "events",
+                "fields": [{ "field": "camera" }],
+                "filter": {
+                    "fields": ["pos.event.payment.total"],
+                    "period": { "type": "today" },
+                    "clauses": []
+                }
+            }
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 import Foundation
 
+public typealias DashbordWidget = Widget
+
 public struct Widget: Codable, Identifiable, Sendable {
     public let id: String
     public var title: String

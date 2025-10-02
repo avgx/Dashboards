@@ -1,0 +1,45 @@
+{
+    "id": "0978ca92-7794-40c0-b887-4001ee4e79f4",
+    "title": "все чеки по кредитным, дисконтным картам",
+    "version": 1,
+    "owner": true,
+    "serviceMode": true,
+    "widgets": [
+        {
+            "id": "Li9hEofDMnFmFwXGzISg9H2WTqzmj088_OFq",
+            "isQL": false,
+            "query": {
+                "view": "fields",
+                "limit": 1000,
+                "table": "pos_events",
+                "fields": [
+                    {
+                        "field": "pos.event.document"
+                    },
+                    {
+                        "field": "time.datetime"
+                    },
+                    {
+                        "field": "pos.event.cashier"
+                    }
+                ],
+                "filter": {
+                    "period": {
+                        "to": null,
+                        "from": null,
+                        "type": "today"
+                    },
+                    "clauses": []
+                },
+                "groupBy": [],
+                "orderBy": []
+            },
+            "style": {},
+            "title": "all",
+            "widget": "EventsTable",
+            "dependOn": [],
+            "description": "",
+            "ignoreCommonFilter": false
+        }
+    ]
+}

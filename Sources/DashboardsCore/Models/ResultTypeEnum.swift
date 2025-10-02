@@ -1,11 +1,3 @@
-//
-//  ResultTypeEnum.swift
-//  Dashboards
-//
-//  Created by Логунов Даниил on 9/26/25.
-//
-
-
 import Foundation
 
 public enum ResultTypeEnum: String, Codable {
