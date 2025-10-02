@@ -9,10 +9,13 @@ public struct DashboardsUI: View {
     public init() { }
     
     public var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Dashboards")
-        }
+        content
+            .navigationTitle("Dashboards")
+            .task {
+                if !core.isConnected {
+                    try? await core.connect()
+                }
+            }
     }
     
     @ViewBuilder

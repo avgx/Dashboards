@@ -1,17 +1,16 @@
-//
-//  ExampleApp.swift
-//  Example
-//
-//  Created by Alexey Govorovsky on 02.10.2025.
-//
-
 import SwiftUI
+import DashboardsCore
 
 @main
 struct ExampleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if #available(iOS 16.0, *) {
+                ContentView()
+            } else {
+                // Fallback on earlier versions
+                Text("need iOS 16+")
+            }
         }
     }
 }

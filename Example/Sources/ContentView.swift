@@ -1,24 +1,32 @@
-//
-//  ContentView.swift
-//  Example
-//
-//  Created by Alexey Govorovsky on 02.10.2025.
-//
-
 import SwiftUI
+import DashboardsCore
+import DashboardsUI
 
+@available(iOS 16.0, *)
+@MainActor
 struct ContentView: View {
+    @StateObject var core = DashboardsCore.shared
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        //TODO: чуть позже я сюда скопирую реальный вход в облако. Пока как и в пакете - через environment
+        NavigationStack {
+            DashboardsUI()
+                .environmentObject(core)
+                .onAppear {
+                    core.set(
+                        api: URL(string: ProcessInfo.processInfo.environment["API"]!)!,
+                        token: ProcessInfo.processInfo.environment["TOKEN"]!
+                    )
+                }
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    if #available(iOS 16.0, *) {
+        ContentView()
+    } else {
+        // Fallback on earlier versions
+        Text("need iOS 16+")
+    }
 }

@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31618C192E8F312E009C072D /* DashboardsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 31618C182E8F312E009C072D /* DashboardsCore */; };
+		31618C1B2E8F312E009C072D /* DashboardsUI in Frameworks */ = {isa = PBXBuildFile; productRef = 31618C1A2E8F312E009C072D /* DashboardsUI */; };
 		31752D782E8EAFC5005B1740 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D772E8EAFC5005B1740 /* ExampleApp.swift */; };
 		31752D7A2E8EAFC5005B1740 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D792E8EAFC5005B1740 /* ContentView.swift */; };
 		31752D7C2E8EAFCB005B1740 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31752D7B2E8EAFCB005B1740 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		31618C162E8F305D009C072D /* Dashboards */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Dashboards; path = ..; sourceTree = SOURCE_ROOT; };
 		31752D742E8EAFC5005B1740 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31752D772E8EAFC5005B1740 /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
 		31752D792E8EAFC5005B1740 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -24,17 +27,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31618C192E8F312E009C072D /* DashboardsCore in Frameworks */,
+				31618C1B2E8F312E009C072D /* DashboardsUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		31618C172E8F312E009C072D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		31752D6B2E8EAFC5005B1740 = {
 			isa = PBXGroup;
 			children = (
+				31618C162E8F305D009C072D /* Dashboards */,
 				31752D832E8EB242005B1740 /* Resources */,
 				31752D822E8EB0F1005B1740 /* Sources */,
+				31618C172E8F312E009C072D /* Frameworks */,
 				31752D752E8EAFC5005B1740 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +95,8 @@
 			);
 			name = Example;
 			packageProductDependencies = (
+				31618C182E8F312E009C072D /* DashboardsCore */,
+				31618C1A2E8F312E009C072D /* DashboardsUI */,
 			);
 			productName = Example;
 			productReference = 31752D742E8EAFC5005B1740 /* Example.app */;
@@ -347,6 +363,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		31618C182E8F312E009C072D /* DashboardsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DashboardsCore;
+		};
+		31618C1A2E8F312E009C072D /* DashboardsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DashboardsUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 31752D6C2E8EAFC5005B1740 /* Project object */;
 }
