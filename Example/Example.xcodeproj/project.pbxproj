@@ -6,17 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		31752D782E8EAFC5005B1740 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D772E8EAFC5005B1740 /* ExampleApp.swift */; };
+		31752D7A2E8EAFC5005B1740 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D792E8EAFC5005B1740 /* ContentView.swift */; };
+		31752D7C2E8EAFCB005B1740 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31752D7B2E8EAFCB005B1740 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		31752D742E8EAFC5005B1740 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31752D772E8EAFC5005B1740 /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
+		31752D792E8EAFC5005B1740 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		31752D7B2E8EAFCB005B1740 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		31752D762E8EAFC5005B1740 /* Example */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Example;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		31752D712E8EAFC5005B1740 /* Frameworks */ = {
@@ -32,7 +33,8 @@
 		31752D6B2E8EAFC5005B1740 = {
 			isa = PBXGroup;
 			children = (
-				31752D762E8EAFC5005B1740 /* Example */,
+				31752D832E8EB242005B1740 /* Resources */,
+				31752D822E8EB0F1005B1740 /* Sources */,
 				31752D752E8EAFC5005B1740 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +45,23 @@
 				31752D742E8EAFC5005B1740 /* Example.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		31752D822E8EB0F1005B1740 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				31752D792E8EAFC5005B1740 /* ContentView.swift */,
+				31752D772E8EAFC5005B1740 /* ExampleApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		31752D832E8EB242005B1740 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				31752D7B2E8EAFCB005B1740 /* Assets.xcassets */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +78,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				31752D762E8EAFC5005B1740 /* Example */,
 			);
 			name = Example;
 			packageProductDependencies = (
@@ -109,6 +125,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31752D7C2E8EAFCB005B1740 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +136,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31752D7A2E8EAFC5005B1740 /* ContentView.swift in Sources */,
+				31752D782E8EAFC5005B1740 /* ExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
