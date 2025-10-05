@@ -24,4 +24,8 @@ class DefaultNetworkService: NetworkServiceProtocol {
         try await client.send(DashboardsAPI.tables(lang: lang))
     }
     
+    func executeQuery(query: Query) async throws -> Response<QueryResponse> {
+        try await client.send(DashboardsAPI.query(query: query))
+    }
+    
 }

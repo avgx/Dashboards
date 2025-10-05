@@ -12,11 +12,12 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var dashboards: Resource<[Dashboard]> = .pending
     @Published public private(set) var eventFields: Resource<[EventField]> = .pending
     @Published public private(set) var eventTables: Resource<[EventTable]> = .pending
+    @Published public private(set) var widgetData: [String: Resource<QueryResponse>] = [:]
     @Published public private(set) var isConnected: Bool = false
     @Published public private(set) var isLoaded: Bool = false
     
     private var networkService: NetworkServiceProtocol
-
+    
     private init() {
         self.networkService = DefaultNetworkService(client: HttpClient5(baseURL: .invalid, authorization: .bearer("")))
     }
@@ -29,9 +30,11 @@ public class DashboardsCore: ObservableObject {
     public func connect() async throws {
         self.isConnected = false
         self.isLoaded = false
+        
         self.dashboards = .pending
         self.eventFields = .pending
         self.eventTables = .pending
+        
         
         do {
             try await networkService.connect()
@@ -41,8 +44,8 @@ public class DashboardsCore: ObservableObject {
             self.isLoaded = true
             
         } catch {
-            self.isConnected = false
-            self.isLoaded = false
+            self.isConnected = true
+            self.isLoaded = true
             
             self.dashboards = .error(error)
             self.eventFields = .error(error)
@@ -68,9 +71,18 @@ public class DashboardsCore: ObservableObject {
             self.dashboards = .success(dashboard.value)
             self.eventFields = .success(fields.value)
             self.eventTables = .success(tables.value)
+            /// Временный дебаг для проверки структуры encode dashboard
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let encodedData = try encoder.encode(dashboard.value.first)
+            
+            if let jsonString = String(data: encodedData, encoding: .utf8) {
+                debugPrint("JSON: \(jsonString)")
+            }
+            
         } catch {
-            self.isConnected = false
-            self.isLoaded = false
+            self.isConnected = true
+            self.isLoaded = true
             
             self.dashboards = .error(error)
             self.eventFields = .error(error)
@@ -78,4 +90,28 @@ public class DashboardsCore: ObservableObject {
             throw error
         }
     }
+    
+    public func loadWidgetData(widget: Widget) async {
+        guard let widgetQuery = widget.query else { return }
+        widgetData[widget.id] = .loading
+        
+        let query = QueryBuilder.build(from: widgetQuery)
+        
+        do {
+            /// Временный дебаг для проверки структуры post запроса
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let encodedData = try encoder.encode(query)
+            
+            if let jsonString = String(data: encodedData, encoding: .utf8) {
+                debugPrint("JSON: \(jsonString)")
+            }
+            
+            let response = try await networkService.executeQuery(query: query)
+            widgetData[widget.id] = .success(response.value)
+        } catch {
+            widgetData[widget.id] = .error(error)
+        }
+    }
+    
 }

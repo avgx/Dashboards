@@ -3,6 +3,7 @@ import DashboardsCore
 import Foundation
 
 struct DashboardDetailsView: View {
+    @StateObject var core = DashboardsCore.shared
     let dashboard: Dashboard
     
     var body: some View {
@@ -30,8 +31,10 @@ struct DashboardDetailsView: View {
                         
                         ForEach(dashboard.widgets) { widget in
                             VStack(alignment: .leading, spacing: 6) {
-                                WidgetView(widget: widget)
-                                
+                                WidgetView(widget: widget, core: core)
+                                    .task {
+                                        await core.loadWidgetData(widget: widget)
+                                    }
                                 if let dependencies = widget.dependOn, !dependencies.isEmpty {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Dependencies:")

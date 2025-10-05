@@ -1,0 +1,222 @@
+{
+  "view": "fields",
+  "limit": 1000,
+  "table": "events",
+  "fields": [
+    {
+      "field": "time.datetime"
+    },
+    {
+      "field": "camera",
+      "prefix": "events_status"
+    },
+    {
+      "field": "cloud.domain"
+    },
+    {
+      "field": "detector.listedLpr.list"
+    },
+    {
+      "field": "detector.lpr.plate"
+    },
+    {
+      "field": "snapshot_url"
+    },
+    {
+      "field": "acfa.localized_description"
+    },
+    {
+      "field": "event.id"
+    },
+    {
+      "field": "status.name"
+    },
+    {
+      "field": "status.comment"
+    }
+  ],
+  "filter": {
+    "period": {
+      "from": "2025-04-18T09:15:00.000Z",
+      "to": "2025-04-18T09:20:00.000Z",
+      "type": "forever",
+      "timeZone": "Europe/Minsk"
+    },
+    "clauses": []
+  },
+  "groupBy": [],
+  "orderBy": [
+    {
+      "desc": true,
+      "field": "time.datetime"
+    }
+  ],
+  "distinctOn": [
+    {
+      "field": "time.datetime"
+    },
+    {
+      "field": "@time",
+      "prefix": "measurements"
+    }
+  ],
+  "joinSubquery": {
+    "alias": "@measurements",
+    "joinType": "LEFT",
+    "subquery": {
+      "alias": "@sub",
+      "table": "acfa_events",
+      "fields": [
+        {
+          "alias": "@time",
+          "field": "time.datetime"
+        },
+        {
+          "expression": {
+            "left": {
+              "field": "time.datetime"
+            },
+            "alias": "@time1",
+            "right": {
+              "timeInterval": {
+                "type": "second",
+                "value": 1
+              }
+            },
+            "operator": "subtract"
+          }
+        },
+        {
+          "expression": {
+            "left": {
+              "field": "time.datetime"
+            },
+            "alias": "@time2",
+            "right": {
+              "timeInterval": {
+                "type": "second",
+                "value": 2
+              }
+            },
+            "operator": "subtract"
+          }
+        },
+        {
+          "expression": {
+            "left": {
+              "field": "time.datetime"
+            },
+            "alias": "@time3",
+            "right": {
+              "timeInterval": {
+                "type": "second",
+                "value": 3
+              }
+            },
+            "operator": "subtract"
+          }
+        },
+        {
+          "expression": {
+            "left": {
+              "field": "time.datetime"
+            },
+            "alias": "@time4",
+            "right": {
+              "timeInterval": {
+                "type": "second",
+                "value": 4
+              }
+            },
+            "operator": "subtract"
+          }
+        },
+        {
+          "expression": {
+            "left": {
+              "field": "time.datetime"
+            },
+            "alias": "@time5",
+            "right": {
+              "timeInterval": {
+                "type": "second",
+                "value": 1
+              }
+            },
+            "operator": "add"
+          }
+        },
+        {
+          "field": "acfa.localized_description"
+        },
+        {
+          "alias": "@acfa_camera_group",
+          "field": "camera.group.name"
+        }
+      ],
+      "filter": {
+        "keys": [],
+        "period": {
+          "from": "2025-04-18T09:15:00.000Z",
+          "to": "2025-04-18T09:20:00.000Z",
+          "type": "forever",
+          "timeZone": "Europe/Minsk"
+        },
+        "clauses": [
+          {
+            "op": "in",
+            "field": "acfa.event.id",
+            "value": [
+              "NORMAL",
+              "ALARM"
+            ]
+          }
+        ]
+      },
+      "orderBy": [
+        {
+          "desc": true,
+          "field": "time.datetime"
+        }
+      ]
+    },
+    "conditions": [
+      {
+        "left": "time.datetime",
+        "right": "@time",
+        "operator": "or",
+        "condition": "eq"
+      },
+      {
+        "left": "time.datetime",
+        "right": "@time1",
+        "operator": "or",
+        "condition": "eq"
+      },
+      {
+        "left": "time.datetime",
+        "right": "@time2",
+        "operator": "or",
+        "condition": "eq"
+      },
+      {
+        "left": "time.datetime",
+        "right": "@time3",
+        "operator": "or",
+        "condition": "eq"
+      },
+      {
+        "left": "time.datetime",
+        "right": "@time4",
+        "operator": "or",
+        "condition": "eq"
+      },
+      {
+        "left": "time.datetime",
+        "right": "@time5",
+        "operator": "or",
+        "condition": "eq"
+      }
+    ]
+  }
+}

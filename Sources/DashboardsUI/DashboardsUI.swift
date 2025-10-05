@@ -17,26 +17,23 @@ public struct DashboardsUI: View {
     
     @ViewBuilder
     private var content: some View {
-        if !core.isConnected {
+        switch core.dashboards {
+        case .pending:
             LoadingView(message: "Connecting...")
-        } else if !core.isLoaded {
-            LoadingView(message: "Loading data...")
-        } else {
-            switch core.dashboards {
-            case .pending, .loading:
-                LoadingView(message: "Loading dashboards...")
-            case .error(let error):
-                ErrorView(error: error) {
-                    Task {
-                        try? await core.retry()
-                    }
+        case .loading:
+            LoadingView(message: "Loading dashboards...")
+        case .error(let error):
+            ErrorView(
+                error: error,
+                reloadAction: {
+                    Task { try await core.retry() }
                 }
-            case .success(let dashboards):
-                if dashboards.isEmpty {
-                    EmptyView(message: "No dashboards available")
-                } else {
-                    DashboardsListView(dashboards: dashboards)
-                }
+            )
+        case .success(let dashboards):
+            if dashboards.isEmpty {
+                EmptyView(message: "No dashboards available")
+            } else {
+                DashboardsListView(dashboards: dashboards)
             }
         }
     }
