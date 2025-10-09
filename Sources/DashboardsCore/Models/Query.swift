@@ -33,3 +33,17 @@ public struct Query: Codable {
         self.joinSubquery = joinSubquery
     }
 }
+
+extension Query: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let encodedData = try? encoder.encode(self)
+        
+        if let encodedData, let jsonString = String(data: encodedData, encoding: .utf8) {
+            return "Query: \(jsonString)"
+        } else {
+            return "invalid"
+        }
+    }
+}

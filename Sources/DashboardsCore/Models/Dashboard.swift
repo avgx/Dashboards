@@ -22,3 +22,17 @@ public struct Dashboard: Codable, Identifiable, Sendable, Equatable {
         lhs.id == rhs.id
     }
 }
+
+extension Dashboard: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let encodedData = try? encoder.encode(self)
+        
+        if let encodedData, let jsonString = String(data: encodedData, encoding: .utf8) {
+            return "Dashboard: \(jsonString)"
+        } else {
+            return "invalid"
+        }
+    }
+}

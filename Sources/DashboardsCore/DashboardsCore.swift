@@ -12,7 +12,6 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var dashboards: Resource<[Dashboard]> = .pending
     @Published public private(set) var eventFields: Resource<[EventField]> = .pending
     @Published public private(set) var eventTables: Resource<[EventTable]> = .pending
-    @Published public private(set) var widgetData: [String: Resource<QueryResponse>] = [:]
     @Published public private(set) var isConnected: Bool = false
     @Published public private(set) var isLoaded: Bool = false
     
@@ -71,15 +70,8 @@ public class DashboardsCore: ObservableObject {
             self.dashboards = .success(dashboard.value)
             self.eventFields = .success(fields.value)
             self.eventTables = .success(tables.value)
-            /// Временный дебаг для проверки структуры encode dashboard
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            let encodedData = try encoder.encode(dashboard.value.first)
             
-            if let jsonString = String(data: encodedData, encoding: .utf8) {
-                debugPrint("JSON: \(jsonString)")
-            }
-            
+//          Если нужно для отладки  print("\(dashboard.value)")
         } catch {
             self.isConnected = true
             self.isLoaded = true
@@ -91,27 +83,15 @@ public class DashboardsCore: ObservableObject {
         }
     }
     
-    public func loadWidgetData(widget: Widget) async {
-        guard let widgetQuery = widget.query else { return }
-        widgetData[widget.id] = .loading
+    public func queryWidgetData(widget: Widget) async throws -> QueryResponse {
+        guard let widgetQuery = widget.query else { throw DashboardsError.missingQuery }
         
         let query = QueryBuilder.build(from: widgetQuery)
+        /// Временный дебаг для проверки структуры post запроса
+        //debugPrint(query.debugDescription)
         
-        do {
-            /// Временный дебаг для проверки структуры post запроса
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            let encodedData = try encoder.encode(query)
-            
-            if let jsonString = String(data: encodedData, encoding: .utf8) {
-                debugPrint("JSON: \(jsonString)")
-            }
-            
-            let response = try await networkService.executeQuery(query: query)
-            widgetData[widget.id] = .success(response.value)
-        } catch {
-            widgetData[widget.id] = .error(error)
-        }
+        let response = try await networkService.executeQuery(query: query)
+        return response.value
     }
     
 }

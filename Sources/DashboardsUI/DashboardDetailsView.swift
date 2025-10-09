@@ -3,10 +3,16 @@ import DashboardsCore
 import Foundation
 
 struct DashboardDetailsView: View {
-    @StateObject var core = DashboardsCore.shared
-    let dashboard: Dashboard
+    @EnvironmentObject private var core: DashboardsCore
+    @StateObject private var runtime: DashboardRuntime
+    
+    init(dashboard: Dashboard) {
+        self._runtime = StateObject(wrappedValue: .init(dashboard: dashboard))
+    }
     
     var body: some View {
+        let dashboard = runtime.dashboard
+        
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(dashboard.title)
@@ -31,10 +37,8 @@ struct DashboardDetailsView: View {
                         
                         ForEach(dashboard.widgets) { widget in
                             VStack(alignment: .leading, spacing: 6) {
-                                WidgetView(widget: widget, core: core)
-                                    .task {
-                                        await core.loadWidgetData(widget: widget)
-                                    }
+                                WidgetView(widget: widget)
+                                    .environmentObject(runtime)
                                 if let dependencies = widget.dependOn, !dependencies.isEmpty {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Dependencies:")
@@ -53,6 +57,9 @@ struct DashboardDetailsView: View {
                 }
             }
             .padding()
+        }
+        .onAppear {
+            _ = core.isConnected
         }
     }
 }
