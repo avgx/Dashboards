@@ -15,14 +15,4 @@ public enum Period: String, Codable, Sendable {
     case yesterday = "yesterday"
 }
 
-public struct PeriodWrapper: Codable, Sendable {
-    public let type: Period
-    public let from: String?
-    public let to: String?
 
-    public init(type: Period, from: String? = nil, to: String? = nil) {
-        self.type = type
-        self.from = from
-        self.to = to
-    }
-}

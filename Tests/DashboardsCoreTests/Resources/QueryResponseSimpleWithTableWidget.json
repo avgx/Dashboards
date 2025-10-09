@@ -1,0 +1,24 @@
+{
+    "compare": null,
+    "delta": 0,
+    "result": [
+        {
+            "camera.displayId": "11",
+            "camera.group": "e2f20843-7ce5-d04c-8a4f-826e8b16d39c",
+            "camera.name": "паркинг 1",
+            "time.date": "2025-10-04T00:00:00Z"
+        },
+        {
+            "camera.displayId": "12",
+            "camera.group": "e2f20843-7ce5-d04c-8a4f-826e8b16d39c",
+            "camera.name": "паркинг 2",
+            "time.date": "2025-10-04T00:00:00Z"
+        },
+        {
+            "camera.displayId": "11",
+            "camera.group": "e2f20843-7ce5-d04c-8a4f-826e8b16d39c",
+            "camera.name": "паркинг 1",
+            "time.date": "2025-10-04T00:00:00Z"
+        }
+    ]
+}

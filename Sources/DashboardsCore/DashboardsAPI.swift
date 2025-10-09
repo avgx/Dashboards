@@ -1,7 +1,6 @@
 import Foundation
 import Get
 
-
 public enum DashboardsAPI {}
 
 extension DashboardsAPI {
@@ -18,8 +17,17 @@ extension DashboardsAPI {
         Request(path: "/api/v1/ad-dictionary/events/tables/", query: [("lang", lang)])
     }
     
+    public static func query(query: Query) -> Request<QueryResponse> {
+        Request(
+            path: "/api/v2/ad-query/query",
+            method: .post,
+            body: query
+        )
+    }
+    
     public static func connect() -> Request<Void> {
         Request(path: "")
     }
     
 }
+

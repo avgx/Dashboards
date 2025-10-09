@@ -4,8 +4,8 @@ public struct Clause: Codable, Sendable {
     public let id: String?
     public let op: String?
     public let type: String?
-    public let field: String
-    public let value: [String]
+    public let field: String?
+    public let value: [String]?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -20,7 +20,7 @@ public struct Clause: Codable, Sendable {
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
         self.op = try container.decodeIfPresent(String.self, forKey: .op)
         self.type = try container.decodeIfPresent(String.self, forKey: .type)
-        self.field = try container.decode(String.self, forKey: .field)
+        self.field = try container.decodeIfPresent(String.self, forKey: .field)
         do {
             if let valueArray = try? container.decode([String].self, forKey: .value) {
                 self.value = valueArray
@@ -43,7 +43,7 @@ public struct Clause: Codable, Sendable {
         try container.encodeIfPresent(id, forKey: .id)
         try container.encodeIfPresent(op, forKey: .op)
         try container.encodeIfPresent(type, forKey: .type)
-        try container.encode(field, forKey: .field)
-        try container.encode(value, forKey: .value)
+        try container.encodeIfPresent(field, forKey: .field)
+        try container.encodeIfPresent(value, forKey: .value)
     }
 }

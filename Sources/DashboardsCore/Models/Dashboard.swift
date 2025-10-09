@@ -16,27 +16,9 @@ public struct Dashboard: Codable, Identifiable, Sendable, Equatable {
     public let commonFilterValue: CommonFilterValue?
     public let layout: Layout?
     public var widgets: [Widget]
-    public let style: [String: Data]?
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case description
-        case revision
-        case tags
-        case owner
-        case version
-        case lang
-        case serviceMode
-        case commonFilter
-        case commonFilterValue
-        case layout
-        case widgets
-        case style
-    }
-    
+    public let style: [String: AnyCodable]?
+
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
-    
 }

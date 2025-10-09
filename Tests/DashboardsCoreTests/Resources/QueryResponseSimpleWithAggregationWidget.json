@@ -1,0 +1,14 @@
+{
+    "compare": null,
+    "delta": 0,
+    "result": [
+        {
+            "camera": "DESKTOP-UJ07PTL/DeviceIpint.11/SourceEndpoint.video:0:0",
+            "count": 9946
+        },
+        {
+            "camera": "DESKTOP-UJ07PTL/DeviceIpint.12/SourceEndpoint.video:0:0",
+            "count": 9945
+        }
+    ]
+}

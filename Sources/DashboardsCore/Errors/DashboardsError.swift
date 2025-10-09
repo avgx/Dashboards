@@ -5,4 +5,5 @@ public enum DashboardsError: Error {
     case invalidStatusCode
     case missingCredentials
     case notConnected
+    case missingQuery
 }

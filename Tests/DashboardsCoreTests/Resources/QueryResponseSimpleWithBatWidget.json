@@ -1,0 +1,27 @@
+{
+    "compare": null,
+    "delta": 0,
+    "result": [
+        {
+            "camera": "DESKTOP-UJ07PTL/DeviceIpint.11/SourceEndpoint.video:0:0",
+            "count": 637,
+            "datetime.hour": "2025-10-04T01:00:00Z",
+            "time.date": "2025-10-04T00:00:00Z",
+            "time.hour": 1
+        },
+        {
+            "camera": "DESKTOP-UJ07PTL/DeviceIpint.11/SourceEndpoint.video:0:0",
+            "count": 628,
+            "datetime.hour": "2025-10-04T00:00:00Z",
+            "time.date": "2025-10-04T00:00:00Z",
+            "time.hour": 0
+        },
+        {
+            "camera": "DESKTOP-UJ07PTL/DeviceIpint.11/SourceEndpoint.video:0:0",
+            "count": 628,
+            "datetime.hour": "2025-10-04T04:00:00Z",
+            "time.date": "2025-10-04T00:00:00Z",
+            "time.hour": 4
+        }
+    ]
+}
