@@ -6,4 +6,5 @@ public enum DashboardsError: Error {
     case missingCredentials
     case notConnected
     case missingQuery
+    case unexpectedResponse
 }

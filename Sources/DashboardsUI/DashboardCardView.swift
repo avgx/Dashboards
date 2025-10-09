@@ -3,10 +3,15 @@ import DashboardsCore
 import Foundation
 
 struct DashboardCardView: View {
+    @EnvironmentObject private var core: DashboardsCore
+    
     let dashboard: Dashboard
     
     var body: some View {
-        NavigationLink(destination: DashboardDetailsView(dashboard: dashboard)) {
+        NavigationLink(destination: {
+            DashboardDetailsView(dashboard: dashboard)
+                .environmentObject(core)
+        }) {
             card
         }
     }
