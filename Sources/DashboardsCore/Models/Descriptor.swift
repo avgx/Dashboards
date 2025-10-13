@@ -1,12 +1,12 @@
 import Foundation
 
 public struct Descriptor: Codable {
-    let childs, fields: [String]?
-    let key: String
-    let tables: [Table]?
-    let type: ResultTypeEnum
-    let value: String?
-    let resultType: ResultTypeEnum?
+    public let childs, fields: [String]?
+    public let key: String
+    public let tables: [Table]?
+    public let type: ResultTypeEnum
+    public let value: String?
+    public let resultType: ResultTypeEnum?
 
     enum CodingKeys: String, CodingKey {
         case childs, fields, key, tables, type, value

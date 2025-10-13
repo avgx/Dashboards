@@ -13,6 +13,14 @@ extension DashboardsAPI {
         Request(path: "/api/v1/ad-dictionary/events/fields/", query: [("lang", lang)])
     }
     
+    public static func fieldValues(type: String, name: String, lang: String) -> Request<[FieldValues]> {
+        Request(
+            path: "/api/v2/ad-dictionary/events/fields/\(type)/\(name)",
+            method: .post,
+            query: [("lang", lang)]
+        )
+    }
+    
     public static func tables(lang: String) -> Request<[EventTable]> {
         Request(path: "/api/v1/ad-dictionary/events/tables/", query: [("lang", lang)])
     }

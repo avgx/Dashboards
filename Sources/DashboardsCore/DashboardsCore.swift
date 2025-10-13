@@ -71,7 +71,6 @@ public class DashboardsCore: ObservableObject {
             self.eventFields = .success(fields.value)
             self.eventTables = .success(tables.value)
             
-//          Если нужно для отладки  print("\(dashboard.value)")
         } catch {
             self.isConnected = true
             self.isLoaded = true
@@ -87,11 +86,19 @@ public class DashboardsCore: ObservableObject {
         guard let widgetQuery = widget.query else { throw DashboardsError.missingQuery }
         
         let query = QueryBuilder.build(from: widgetQuery)
-        /// Временный дебаг для проверки структуры post запроса
-        //debugPrint(query.debugDescription)
         
         let response = try await networkService.executeQuery(query: query)
         return response.value
     }
     
+    public func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
+        let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
+        
+        guard let fieldValues = response.value.first else {
+            throw DashboardsError.unexpectedResponse
+        }
+        
+        return fieldValues
+    }
+
 }
