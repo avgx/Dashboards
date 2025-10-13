@@ -2,7 +2,6 @@ import SwiftUI
 import DashboardsCore
 import Foundation
 
-@available(iOS 17.0, *)
 struct DashboardCardView: View {
     @EnvironmentObject private var core: DashboardsCore
     
@@ -10,11 +9,7 @@ struct DashboardCardView: View {
     
     var body: some View {
         NavigationLink(destination: {
-<<<<<<< HEAD
             DashboardDetailsView(dashboard: dashboard)
-=======
-            DashboardView(dashboard: dashboard)
->>>>>>> 035abfa (refactoring)
                 .environmentObject(core)
         }) {
             card
