@@ -2,20 +2,22 @@ import SwiftUI
 import DashboardsCore
 
 @MainActor
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 public struct DashboardsUI: View {
     @EnvironmentObject private var core: DashboardsCore
     
     public init() { }
     
     public var body: some View {
-        content
-            .navigationTitle("Dashboards")
-            .task {
-                if !core.isConnected {
-                    try? await core.connect()
+        NavigationStack {
+            content
+                .navigationTitle("Dashboards")
+                .task {
+                    if !core.isConnected {
+                        try? await core.connect()
+                    }
                 }
-            }
+        }
     }
     
     @ViewBuilder
@@ -33,20 +35,25 @@ public struct DashboardsUI: View {
                 }
             )
         case .success(let dashboards):
-            if dashboards.isEmpty {
-                EmptyView(message: "No dashboards available")
-            } else {
-                DashboardsListView(dashboards: dashboards)
-            }
+            DashboardsListView(dashboards: dashboards)
+                .background(Color(.systemBackground))
+                .overlay {
+                    if dashboards.isEmpty {
+                        ContentUnavailableView(
+                            "No Dashboards",
+                            systemImage: "chart.bar.doc.horizontal",
+                            description: Text("You can create or load dashboards from the API.")
+                        )
+                    }
+                }
         }
     }
     
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 #Preview {
     let core = DashboardsCore.shared
-    
     DashboardsUI()
         .environmentObject(core)
         .onAppear {
