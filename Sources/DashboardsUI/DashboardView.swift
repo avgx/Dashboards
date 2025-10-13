@@ -2,7 +2,12 @@ import SwiftUI
 import DashboardsCore
 import Foundation
 
+<<<<<<< HEAD:Sources/DashboardsUI/DashboardDetailsView.swift
 struct DashboardDetailsView: View {
+=======
+@available(iOS 17.0, *)
+struct DashboardView: View {
+>>>>>>> 035abfa (refactoring):Sources/DashboardsUI/DashboardView.swift
     @EnvironmentObject private var core: DashboardsCore
     @StateObject private var runtime: DashboardRuntime
     

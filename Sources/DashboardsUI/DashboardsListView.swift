@@ -2,6 +2,7 @@ import SwiftUI
 import DashboardsCore
 import Foundation
 
+@available(iOS 17.0, *)
 struct DashboardsListView: View {
     let dashboards: [Dashboard]
     
