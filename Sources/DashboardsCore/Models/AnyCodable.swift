@@ -83,24 +83,4 @@ extension AnyCodable {
     public var isNumber: Bool {
         return doubleValue != nil
     }
-
-    /// хелпер для получения значения как String
-    public var stringValue: String? {
-            switch value {
-            case let v as String:
-                return v
-            case let v as Int:
-                return String(v)
-            case let v as Double:
-                return String(v)
-            case let v as Bool:
-                return v ? "true" : "false"
-            case let v as Date:
-                let f = ISO8601DateFormatter()
-                return f.string(from: v)
-            default:
-                return String(describing: value)
-            }
-        }
-
 }

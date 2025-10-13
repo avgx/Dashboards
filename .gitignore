@@ -8,4 +8,3 @@ DerivedData/
 .netrc
 .env
 .swiftpm/xcode/xcshareddata
-*.xcscheme

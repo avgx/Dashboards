@@ -11,7 +11,6 @@ public struct Visualization: Codable, Sendable {
     public let rowsPerPage: String?
     public let virtualFields: [String?]?
     public let autoplay: Bool?
-    public let chartType: String?
     public let qlFilters: [Any]?
     public let archiveEnabled: Bool?
     public let dialog: Dialog?
@@ -26,7 +25,6 @@ public struct Visualization: Codable, Sendable {
         case noDataFormat
         case rowsPerPage
         case virtualFields
-        case chartType
         case autoplay
         case qlFilters
         case archiveEnabled
@@ -62,7 +60,7 @@ public struct Visualization: Codable, Sendable {
             self.fields = nil
         }
         
-        self.noDataLink = try container.decodeIfPresent(String.self, forKey: .noDataLink)
+            self.noDataLink = try container.decodeIfPresent(String.self, forKey: .noDataLink)
         self.noDataValue = try container.decodeIfPresent(String.self, forKey: .noDataValue)
         self.noDataFormat = try container.decodeIfPresent(String.self, forKey: .noDataFormat)
         
@@ -103,7 +101,6 @@ public struct Visualization: Codable, Sendable {
         }
         self.archiveEnabled = try container.decodeIfPresent(Bool.self, forKey: .archiveEnabled)
         self.dialog = try container.decodeIfPresent(Dialog.self, forKey: .dialog)
-        self.chartType = try container.decodeIfPresent(String.self, forKey: .chartType)
     }
     
     public func encode(to encoder: Encoder) throws {
