@@ -14,6 +14,7 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var eventTables: Resource<[EventTable]> = .pending
     @Published public private(set) var isConnected: Bool = false
     @Published public private(set) var isLoaded: Bool = false
+    @Published public private(set) var fieldDictionaries: [String: [String: String]] = [:]
     
     private var networkService: NetworkServiceProtocol
     
@@ -91,14 +92,31 @@ public class DashboardsCore: ObservableObject {
         return response.value
     }
     
-    public func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
-        let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
-        
-        guard let fieldValues = response.value.first else {
-            throw DashboardsError.unexpectedResponse
+    public func getFieldDictionary(
+            type: String,
+            fieldName: String,
+            lang: String = "ru"
+        ) async throws -> [String: String] {
+            if let cached = fieldDictionaries[fieldName] {
+                return cached
+            }
+            
+            let fieldValues = try await fetchFieldValues(type: type, fieldName: fieldName, lang: lang)
+            
+            let dict = fieldValues.result.reduce(into: [String: String]()) { acc, item in
+                acc[item.key] = item.translation ?? item.value ?? item.key
+            }
+            
+            fieldDictionaries[fieldName] = dict
+            
+            return dict
         }
-        
-        return fieldValues
+    
+    private func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
+        let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
+        return response.value
     }
 
+    
+    
 }

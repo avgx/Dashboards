@@ -10,6 +10,7 @@ struct TableWidgetView: View {
     @State private var table: Resource<QueryResponse> = .pending
     @State private var refresh = UUID()
     @State private var fontScale: CGFloat = 1.0
+    @State private var fieldDictionaries: [String: [String: String]] = [:]
     
     var body: some View {
         VStack(spacing: 12) {
@@ -32,8 +33,7 @@ struct TableWidgetView: View {
                     
                     Button {
                         fontScale = min(1.4, fontScale + 0.1)
-                    }
-                    label: {
+                    } label: {
                         Image(systemName: "textformat.size.larger")
                             .font(.system(size: 14))
                     }
@@ -65,34 +65,55 @@ struct TableWidgetView: View {
         .cornerRadius(16)
         .shadow(radius: 1)
         .task(id: refresh) {
-            do {
-                let response = try await core.queryWidgetData(widget: widget)
-                runtime.set(response: response, for: widget)
-                table = .success(response)
-            } catch {
-                runtime.set(error: error, for: widget)
-                table = .error(error)
-            }
+            await loadData()
         }
     }
+    
+    private func loadData() async {
+        table = .loading
+        fieldDictionaries = [:]
+        
+        do {
+            let response = try await core.queryWidgetData(widget: widget)
+            runtime.set(response: response, for: widget)
+            table = .success(response)
+            
+            guard let eventFields = core.eventFields.value else { return }
+            
+            for key in response.allKeys {
+                let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"	
+                
+                let dict = try await core.getFieldDictionary(
+                    type: type,
+                    fieldName: key,
+                    lang: "ru"
+                )
+                fieldDictionaries[key] = dict
+                
+            }
+            
+        } catch {
+            runtime.set(error: error, for: widget)
+            table = .error(error)
+        }
+    }
+    
     
     @ViewBuilder
     private func buildTable(from response: QueryResponse) -> some View {
         let rows = response.result
-        let keys = response.allKeys.prefix(4)
+        let keys = response.allKeys.prefix(5)
         
         if rows.isEmpty {
-            let noData = (widget.visualization?.noDataValue)!
+            let noData = widget.visualization?.noDataValue ?? "Нет данных"
             
-            ContentUnavailableView(
-                noData,
-                systemImage: "tray"
-            )
-            .foregroundColor(.secondary)
-            .frame(maxWidth: .infinity, minHeight: 100)
+            ContentUnavailableView(noData, systemImage: "tray")
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, minHeight: 100)
         } else {
             ScrollView(.vertical, showsIndicators: true) {
                 LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+                    
                     HStack(spacing: 0) {
                         ForEach(keys, id: \.self) { key in
                             Text(key)
@@ -106,12 +127,14 @@ struct TableWidgetView: View {
                                 .background(Color.accentColor.opacity(0.9))
                         }
                     }
-                    .background(.ultraThinMaterial)
                     
                     ForEach(rows.indices, id: \.self) { i in
                         HStack(spacing: 0) {
                             ForEach(keys, id: \.self) { key in
-                                Text(rows[i][key]?.stringValue ?? "—")
+                                let rawValue = rows[i][key]?.stringValue ?? "—"
+                                let displayValue = fieldDictionaries[key]?[rawValue] ?? rawValue
+                                
+                                Text(displayValue)
                                     .font(.system(size: 12 * fontScale))
                                     .foregroundColor(.primary)
                                     .lineLimit(2)

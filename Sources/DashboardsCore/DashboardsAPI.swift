@@ -13,9 +13,9 @@ extension DashboardsAPI {
         Request(path: "/api/v1/ad-dictionary/events/fields/", query: [("lang", lang)])
     }
     
-    public static func fieldValues(type: String, name: String, lang: String) -> Request<[FieldValues]> {
+    public static func fieldValues(type: String, name: String, lang: String) -> Request<FieldValues> {
         Request(
-            path: "/api/v2/ad-dictionary/events/fields/\(type)/\(name)",
+            path: "/api/v2/ad-query/field/\(type)/\(name)",
             method: .post,
             query: [("lang", lang)]
         )
