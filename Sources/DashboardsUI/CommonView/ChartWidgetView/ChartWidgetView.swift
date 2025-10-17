@@ -1,14 +1,16 @@
 import SwiftUI
+import Charts
 import DashboardsCore
 
-struct CounterWidgetView: View {
+@available(iOS 17.0, *)
+struct ChartWidgetView: View {
     @EnvironmentObject private var core: DashboardsCore
     @EnvironmentObject private var runtime: DashboardRuntime
     
     let widget: DashbordWidget
-
+    
     @State var refresh = UUID()
-    @State var count: Resource<Int> = .pending
+    @State private var chart: Resource<QueryResponse> = .pending
     
     private var widgetBinding: Binding<Resource<QueryResponse>?> {
         Binding(
@@ -22,37 +24,28 @@ struct CounterWidgetView: View {
             Text(widget.title)
                 .font(.headline)
             
-            switch count {
+            switch chart {
             case .pending:
                 Text("?")
+                    .frame(maxWidth: .infinity)
             case .loading:
                 ProgressView()
             case .success(let value):
-                Text("\(value)")
-                    .font(.title2)
+                ChartContentView(widget: widget, response: value)
             case .error(let error):
                 ErrorView(error: error, reloadAction: { refresh = UUID() })
             }
         }
         .padding()
-        .frame(maxWidth: .infinity)
+        .frame(minHeight: 200, maxHeight: 260)
         .background(.ultraThinMaterial)
         .cornerRadius(16)
         .shadow(radius: 1)
         .task(id: refresh) {
             do {
                 let response = try await core.queryWidgetData(widget: widget)
-                
-                guard let value = response.result.first?["count"] else {
-                    throw DashboardsError.unexpectedResponse
-                }
-                guard value.isNumber else {
-                    throw DashboardsError.unexpectedResponse
-                }
-                
                 runtime.set(response: response, for: widget)
-                
-                count = .success(value.intValue!)
+                chart = .success(response)
             } catch {
                 runtime.set(error: error, for: widget)
             }
