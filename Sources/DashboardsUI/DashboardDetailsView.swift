@@ -2,8 +2,7 @@ import SwiftUI
 import DashboardsCore
 import Foundation
 
-@available(iOS 17.0, *)
-struct DashboardView: View {
+struct DashboardDetailsView: View {
     @EnvironmentObject private var core: DashboardsCore
     @StateObject private var runtime: DashboardRuntime
     

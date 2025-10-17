@@ -22,6 +22,7 @@ struct CounterWidgetView: View {
             Text(widget.title)
                 .font(.headline)
             
+            /// вариант 1
             switch count {
             case .pending:
                 Text("?")
@@ -33,12 +34,30 @@ struct CounterWidgetView: View {
             case .error(let error):
                 ErrorView(error: error, reloadAction: { refresh = UUID() })
             }
+            
+            Divider()
+            
+            /// вариант 2
+            if let result = widgetBinding.wrappedValue {
+                switch result {
+                case .success(let response):
+                    let value: AnyCodable? = response.result.first?["count"]
+                    let count = value?.intValue ?? .min
+                    Text("\(count)")
+                        .font(.title2)
+                case .error(let error):
+                    ErrorView(error: error, reloadAction: { refresh = UUID() })
+                case .loading:
+                    ProgressView()
+                case .pending:
+                    Text("?")
+                }
+            } else {
+                ProgressView()
+            }
         }
         .padding()
-        .frame(maxWidth: .infinity)
         .background(.ultraThinMaterial)
-        .cornerRadius(16)
-        .shadow(radius: 1)
         .task(id: refresh) {
             do {
                 let response = try await core.queryWidgetData(widget: widget)
