@@ -20,7 +20,7 @@ class DefaultNetworkService: NetworkServiceProtocol {
         try await client.send(DashboardsAPI.fields(lang: lang))
     }
     
-    func fetchFieldValues(type: String, name: String, lang: String) async throws -> Response<[FieldValues]> {
+    func fetchFieldValues(type: String, name: String, lang: String) async throws -> Response<FieldValues> {
         try await client.send(DashboardsAPI.fieldValues(type: type, name: name, lang: lang))
     }
     

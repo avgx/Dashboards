@@ -9,6 +9,7 @@ struct BarChartView: View {
     @State private var xKey: String = ""
     @State private var yKey: String = ""
     @State private var data: [(String, Double)] = []
+    
     var body: some View {
         VStack {
             if data.isEmpty {

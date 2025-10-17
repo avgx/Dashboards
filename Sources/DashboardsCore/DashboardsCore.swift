@@ -93,12 +93,7 @@ public class DashboardsCore: ObservableObject {
     
     public func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
         let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
-        
-        guard let fieldValues = response.value.first else {
-            throw DashboardsError.unexpectedResponse
-        }
-        
-        return fieldValues
+        return response.value
     }
 
 }
