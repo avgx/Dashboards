@@ -5,36 +5,54 @@ import DashboardsCore
 @available(iOS 17.0, *)
 struct BarChartView: View {
     let rows: [[String: AnyCodable]]
-
+    
+    @State private var xKey: String = ""
+    @State private var yKey: String = ""
+    @State private var data: [(String, Double)] = []
+    
     var body: some View {
-        let (xKey, yKey, data) = parseData()
-
-        Chart(data, id: \.0) { item in
-            BarMark(
-                x: .value("X", item.0),
-                y: .value("Y", item.1)
-            )
-            .foregroundStyle(.blue)
+        VStack {
+            if data.isEmpty {
+                Text("Нет данных для отображения")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 180)
+            } else {
+                Chart(data, id: \.0) { item in
+                    BarMark(
+                        x: .value("X", item.0),
+                        y: .value("Y", item.1)
+                    )
+                    .foregroundStyle(.blue)
+                }
+                .chartXAxisLabel(position: .bottom, alignment: .center) {
+                    Text(xKey)
+                }
+                .chartYAxisLabel(position: .leading, alignment: .center) {
+                    Text(yKey)
+                }
+                .frame(maxWidth: .infinity, minHeight: 180)
+                .transition(.opacity.combined(with: .scale))
+            }
         }
-        .chartXAxisLabel(position: .bottom, alignment: .center) {
-            Text(xKey)
+        .onAppear {
+            parseData()
         }
-        .chartYAxisLabel(position: .leading, alignment: .center) {
-            Text(yKey)
-        }
-        .frame(maxWidth: .infinity, minHeight: 180)
     }
-
-    private func parseData() -> (xKey: String, yKey: String, data: [(String, Double)]) {
-        let xKey = rows.first?.keys.first(where: { $0.contains("time") || $0.contains("date") }) ?? rows.first?.keys.first ?? ""
-        let yKey = "count"
-
-        let data: [(String, Double)] = rows.compactMap { row in
-            guard let y = row[yKey]?.doubleValue else { return nil }
-            let x = row[xKey]?.stringValue ?? "-"
+    
+    private func parseData() {
+        guard let firstRow = rows.first else { return }
+        
+        let detectedXKey = firstRow.keys.first(where: { $0.lowercased().contains("time") || $0.lowercased().contains("date") }) ?? firstRow.keys.first ?? ""
+        let detectedYKey = "count"
+        
+        let parsed: [(String, Double)] = rows.compactMap { row in
+            guard let y = row[detectedYKey]?.doubleValue else { return nil }
+            let x = row[detectedXKey]?.stringValue ?? "-"
             return (x, y)
         }
-
-        return (xKey, yKey, data)
+        
+        xKey = detectedXKey
+        yKey = detectedYKey
+        data = parsed
     }
-} 
+}

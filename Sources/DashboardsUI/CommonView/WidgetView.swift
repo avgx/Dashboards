@@ -14,8 +14,6 @@ struct WidgetView: View {
                 ChartWidgetView(widget: widget)
             case "EventsTable":
                 TableWidgetView(widget: widget)
-            case "RangeBarChart":
-                ChartWidgetView(widget: widget)
             default:
                 Text("Unsupported widget type: \(widget.widget)")
             }
