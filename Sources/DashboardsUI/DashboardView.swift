@@ -62,5 +62,6 @@ struct DashboardView: View {
         .onAppear {
             _ = core.isConnected
         }
+        
     }
 }

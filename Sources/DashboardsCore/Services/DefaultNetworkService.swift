@@ -32,4 +32,8 @@ class DefaultNetworkService: NetworkServiceProtocol {
         try await client.send(DashboardsAPI.query(query: query))
     }
     
+    func fetchShareToken() async throws -> Response<ShareToken> {
+        try await client.send(DashboardsAPI.shareToken())
+    }
+
 }

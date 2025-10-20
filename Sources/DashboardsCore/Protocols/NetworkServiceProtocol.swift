@@ -8,4 +8,5 @@ public protocol NetworkServiceProtocol {
     func fetchEventTables(lang: String) async throws -> Response<[EventTable]>
     func executeQuery(query: Query) async throws -> Response<QueryResponse>
     func fetchFieldValues(type: String, name: String, lang: String) async throws -> Response<FieldValues>
+    func fetchShareToken() async throws -> Response<ShareToken>
 }
