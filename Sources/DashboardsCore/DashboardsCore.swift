@@ -116,7 +116,4 @@ public class DashboardsCore: ObservableObject {
         let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
         return response.value
     }
-
-    
-    
 }
