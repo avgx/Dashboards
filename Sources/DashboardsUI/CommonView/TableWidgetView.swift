@@ -81,7 +81,7 @@ struct TableWidgetView: View {
             guard let eventFields = core.eventFields.value else { return }
             
             for key in response.allKeys {
-                let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"	
+                let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"
                 
                 let dict = try await core.getFieldDictionary(
                     type: type,
