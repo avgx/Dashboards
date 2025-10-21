@@ -1,11 +1,12 @@
 import SwiftUI
 import DashboardsCore
-import Foundation
+import SafariServicesUI
 
 @available(iOS 17.0, *)
 struct DashboardView: View {
     @EnvironmentObject private var core: DashboardsCore
     @StateObject private var runtime: DashboardRuntime
+    @State private var webURL: URL?
     
     init(dashboard: Dashboard) {
         self._runtime = StateObject(wrappedValue: .init(dashboard: dashboard))
@@ -62,6 +63,19 @@ struct DashboardView: View {
         .onAppear {
             _ = core.isConnected
         }
-        
+        .navigationTitle(dashboard.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if let url = webURL {
+                    Link(destination: url) {
+                        Text("Safari")
+                    }
+                    .openURLInSafariView()
+                }
+            }
+        }
+        .task {
+            webURL = try? await core.makeWebDashboardURL(for: dashboard)
+        }
     }
 }

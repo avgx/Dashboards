@@ -93,27 +93,38 @@ public class DashboardsCore: ObservableObject {
     }
     
     public func getFieldDictionary(
-            type: String,
-            fieldName: String,
-            lang: String = "ru"
-        ) async throws -> [String: String] {
-            if let cached = fieldDictionaries[fieldName] {
-                return cached
-            }
-            
-            let fieldValues = try await fetchFieldValues(type: type, fieldName: fieldName, lang: lang)
-            
-            let dict = fieldValues.result.reduce(into: [String: String]()) { acc, item in
-                acc[item.key] = item.translation ?? item.value ?? item.key
-            }
-            
-            fieldDictionaries[fieldName] = dict
-            
-            return dict
+        type: String,
+        fieldName: String,
+        lang: String = "ru"
+    ) async throws -> [String: String] {
+        if let cached = fieldDictionaries[fieldName] {
+            return cached
         }
+        
+        let fieldValues = try await fetchFieldValues(type: type, fieldName: fieldName, lang: lang)
+        
+        let dict = fieldValues.result.reduce(into: [String: String]()) { acc, item in
+            acc[item.key] = item.translation ?? item.value ?? item.key
+        }
+        
+        fieldDictionaries[fieldName] = dict
+        
+        return dict
+    }
     
     private func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
         let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
         return response.value
+    }
+    
+    public func makeWebDashboardURL(for dashboard: Dashboard) async throws -> URL {
+        let response = try await networkService.fetchShareToken()
+        let token = response.value.shareToken
+        
+        let baseURLString = "https://beta.axxonnet.com"
+        guard let url = URL(string: "\(baseURLString)/dd/shared/\(dashboard.id)?shareToken=\(token)") else {
+            throw URLError(.badURL)
+        }
+        return url
     }
 }
