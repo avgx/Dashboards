@@ -68,7 +68,7 @@ struct DashboardView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let url = webURL {
                     Link(destination: url) {
-                        Text("Safari")
+                        Label("Safari", systemImage: "safari")
                     }
                     .openURLInSafariView()
                 }

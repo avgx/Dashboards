@@ -122,6 +122,7 @@ public class DashboardsCore: ObservableObject {
     public func makeWebDashboardURL(for dashboard: Dashboard) async throws -> URL {
         let response = try await networkService.fetchShareToken()
         let token = response.value.shareToken
+        let baseURL = networkService.baseURL
         
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
             throw URLError(.badURL)

@@ -3,6 +3,7 @@ import Get
 
 class DefaultNetworkService: NetworkServiceProtocol {
     private let client: HttpClient5
+    var baseURL: URL { client.baseURL }
     
     init(client: HttpClient5) {
         self.client = client
