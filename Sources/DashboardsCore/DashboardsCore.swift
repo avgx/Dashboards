@@ -16,6 +16,7 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var isLoaded: Bool = false
     @Published public private(set) var fieldDictionaries: [String: [String: String]] = [:]
     
+    private var baseURL: URL = .invalid
     private var networkService: NetworkServiceProtocol
     
     private init() {
@@ -23,6 +24,7 @@ public class DashboardsCore: ObservableObject {
     }
     
     public func set(api: URL, token: String) {
+        self.baseURL = api
         let client = HttpClient5(baseURL: api, authorization: .bearer(token))
         self.networkService = DefaultNetworkService(client: client)
     }
@@ -121,8 +123,16 @@ public class DashboardsCore: ObservableObject {
         let response = try await networkService.fetchShareToken()
         let token = response.value.shareToken
         
-        let baseURLString = "https://beta.axxonnet.com"
-        guard let url = URL(string: "\(baseURLString)/dd/shared/\(dashboard.id)?shareToken=\(token)") else {
+        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+            throw URLError(.badURL)
+        }
+        
+        components.path = "/dd/shared/\(dashboard.id)"
+        components.queryItems = [
+            URLQueryItem(name: "shareToken", value: token)
+        ]
+        
+        guard let url = components.url else {
             throw URLError(.badURL)
         }
         return url
