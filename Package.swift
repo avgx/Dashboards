@@ -11,7 +11,8 @@ let package = Package(
         .library(name: "DashboardsUI", targets: ["DashboardsUI"])
     ],
     dependencies: [
-        .package(url: "https://github.com/avgx/Get", branch: "main")
+        .package(url: "https://github.com/avgx/Get", branch: "main"),
+        .package(url: "https://github.com/avgx/SafariServicesUI", branch: "main")
     ],
     targets: [
         .target(
@@ -20,8 +21,12 @@ let package = Package(
                 .product(name: "Get", package: "Get")
             ]
         ),
-        .target(name: "DashboardsUI", dependencies: ["DashboardsCore"]),
+        .target(name: "DashboardsUI", dependencies: [
+            "DashboardsCore",
+            .product(
+                name: "SafariServicesUI",
+                package: "SafariServicesUI")]),
         .testTarget(name: "DashboardsCoreTests", dependencies: ["DashboardsCore"], resources: [.process("Resources")]
-        ),
+        )
     ]
 )
