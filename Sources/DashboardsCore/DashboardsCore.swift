@@ -14,7 +14,9 @@ public class DashboardsCore: ObservableObject {
     @Published public private(set) var eventTables: Resource<[EventTable]> = .pending
     @Published public private(set) var isConnected: Bool = false
     @Published public private(set) var isLoaded: Bool = false
+    @Published public private(set) var fieldDictionaries: [String: [String: String]] = [:]
     
+    private var baseURL: URL = .invalid
     private var networkService: NetworkServiceProtocol
     
     private init() {
@@ -22,6 +24,7 @@ public class DashboardsCore: ObservableObject {
     }
     
     public func set(api: URL, token: String) {
+        self.baseURL = api
         let client = HttpClient5(baseURL: api, authorization: .bearer(token))
         self.networkService = DefaultNetworkService(client: client)
     }
@@ -91,9 +94,48 @@ public class DashboardsCore: ObservableObject {
         return response.value
     }
     
-    public func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
+    public func getFieldDictionary(
+        type: String,
+        fieldName: String,
+        lang: String = "ru"
+    ) async throws -> [String: String] {
+        if let cached = fieldDictionaries[fieldName] {
+            return cached
+        }
+        
+        let fieldValues = try await fetchFieldValues(type: type, fieldName: fieldName, lang: lang)
+        
+        let dict = fieldValues.result.reduce(into: [String: String]()) { acc, item in
+            acc[item.key] = item.translation ?? item.value ?? item.key
+        }
+        
+        fieldDictionaries[fieldName] = dict
+        
+        return dict
+    }
+    
+    private func fetchFieldValues(type: String, fieldName: String, lang: String = "en") async throws -> FieldValues {
         let response = try await networkService.fetchFieldValues(type: type, name: fieldName, lang: lang)
         return response.value
     }
-
+    
+    public func makeWebDashboardURL(for dashboard: Dashboard) async throws -> URL {
+        let response = try await networkService.fetchShareToken()
+        let token = response.value.shareToken
+        let baseURL = networkService.baseURL
+        
+        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+            throw URLError(.badURL)
+        }
+        
+        components.path = "/dd/shared/\(dashboard.id)"
+        components.queryItems = [
+            URLQueryItem(name: "shareToken", value: token)
+        ]
+        
+        guard let url = components.url else {
+            throw URLError(.badURL)
+        }
+        return url
+    }
 }
