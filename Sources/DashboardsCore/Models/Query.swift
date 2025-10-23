@@ -4,10 +4,10 @@ public struct Query: Codable {
     public let view: String?
     public let limit: Int?
     public let table: String?
-    public let fields: [QueryField]?
-    public let filter: WidgetFilter?
-    public let groupBy: [String]?
-    public let orderBy: [OrderBy]?
+    public var fields: [QueryField]?
+    public var filter: WidgetFilter?
+    public var groupBy: [String]?
+    public var orderBy: [OrderBy]?
     public let distinctOn: [QueryField]?
     public let joinSubquery: JoinSubquery?
 

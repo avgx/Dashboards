@@ -1,6 +1,7 @@
 import Foundation
 
 public struct Visualization: Codable, Sendable {
+    public let x: String?
     public let hidden: [String]?
     public let op: [String]?
     public let field: [String]?
@@ -17,6 +18,7 @@ public struct Visualization: Codable, Sendable {
     public let dialog: Dialog?
     
     enum CodingKeys: String, CodingKey {
+        case x
         case hidden
         case op
         case field
@@ -104,6 +106,7 @@ public struct Visualization: Codable, Sendable {
         self.archiveEnabled = try container.decodeIfPresent(Bool.self, forKey: .archiveEnabled)
         self.dialog = try container.decodeIfPresent(Dialog.self, forKey: .dialog)
         self.chartType = try container.decodeIfPresent(String.self, forKey: .chartType)
+        self.x = try container.decodeIfPresent(String.self, forKey: .x)
     }
     
     public func encode(to encoder: Encoder) throws {

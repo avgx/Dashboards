@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31618C192E8F312E009C072D /* DashboardsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 31618C182E8F312E009C072D /* DashboardsCore */; };
-		31618C1B2E8F312E009C072D /* DashboardsUI in Frameworks */ = {isa = PBXBuildFile; productRef = 31618C1A2E8F312E009C072D /* DashboardsUI */; };
 		31752D782E8EAFC5005B1740 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D772E8EAFC5005B1740 /* ExampleApp.swift */; };
 		31752D7A2E8EAFC5005B1740 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31752D792E8EAFC5005B1740 /* ContentView.swift */; };
 		31752D7C2E8EAFCB005B1740 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31752D7B2E8EAFCB005B1740 /* Assets.xcassets */; };
+		A5E0F65F2EAD16E7003182F8 /* DashboardsCore in Frameworks */ = {isa = PBXBuildFile; productRef = A5E0F65E2EAD16E7003182F8 /* DashboardsCore */; };
+		A5E0F6612EAD16EB003182F8 /* DashboardsUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5E0F6602EAD16EB003182F8 /* DashboardsUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +27,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31618C192E8F312E009C072D /* DashboardsCore in Frameworks */,
-				31618C1B2E8F312E009C072D /* DashboardsUI in Frameworks */,
+				A5E0F65F2EAD16E7003182F8 /* DashboardsCore in Frameworks */,
+				A5E0F6612EAD16EB003182F8 /* DashboardsUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,8 +95,8 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				31618C182E8F312E009C072D /* DashboardsCore */,
-				31618C1A2E8F312E009C072D /* DashboardsUI */,
+				A5E0F65E2EAD16E7003182F8 /* DashboardsCore */,
+				A5E0F6602EAD16EB003182F8 /* DashboardsUI */,
 			);
 			productName = Example;
 			productReference = 31752D742E8EAFC5005B1740 /* Example.app */;
@@ -126,6 +126,9 @@
 			);
 			mainGroup = 31752D6B2E8EAFC5005B1740;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A5128C782EABA49100116541 /* XCRemoteSwiftPackageReference "Dashboards" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 31752D752E8EAFC5005B1740 /* Products */;
 			projectDirPath = "";
@@ -286,6 +289,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 43V5L8VK44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -293,6 +297,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -317,6 +322,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 43V5L8VK44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -324,6 +330,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -364,12 +371,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		A5128C782EABA49100116541 /* XCRemoteSwiftPackageReference "Dashboards" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/avgx/Dashboards";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		31618C182E8F312E009C072D /* DashboardsCore */ = {
+		A5E0F65E2EAD16E7003182F8 /* DashboardsCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DashboardsCore;
 		};
-		31618C1A2E8F312E009C072D /* DashboardsUI */ = {
+		A5E0F6602EAD16EB003182F8 /* DashboardsUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DashboardsUI;
 		};

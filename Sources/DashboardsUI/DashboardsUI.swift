@@ -9,14 +9,26 @@ public struct DashboardsUI: View {
     public init() { }
     
     public var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Dashboards")
-                .task {
-                    if !core.isConnected {
-                        try? await core.connect()
+        TabView {
+            NavigationStack {
+                content
+                    .navigationTitle("Dashboards")
+                    .task {
+                        if !core.isConnected {
+                            try? await core.connect()
+                        }
                     }
-                }
+            }
+            .tabItem {
+                Label("Dashboards", systemImage: "rectangle.3.group.bubble.left")
+            }
+            
+            NavigationStack {
+                TimeChartTabView()
+            }
+            .tabItem {
+                Label("Time Chart", systemImage: "chart.bar.xaxis")
+            }
         }
     }
     
@@ -66,3 +78,4 @@ public struct DashboardsUI: View {
             }
         }
 }
+

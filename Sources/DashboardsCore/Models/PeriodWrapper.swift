@@ -1,7 +1,7 @@
 import Foundation
 
 public struct PeriodWrapper: Codable, Sendable {
-    public let type: Period?
+    public var type: Period?
     public let from: String?
     public let to: String?
     public let timeZone: String?

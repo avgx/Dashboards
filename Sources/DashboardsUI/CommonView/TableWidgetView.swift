@@ -79,39 +79,29 @@ struct TableWidgetView: View {
             table = .success(response)
             
             guard let eventFields = core.eventFields.value else { return }
-                        
-            await withTaskGroup(of: (String, [String: String]?).self) { group in
-                for key in response.allKeys {
-                    let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"
-                    group.addTask {
-                        do {
-                            let values = try await core.fetchFieldValues(
-                                type: type,
-                                fieldName: key,
-                                lang: "ru"
-                            )
-
-                            let dict = values.result.reduce(into: [String: String]()) { acc, item in
-                                acc[item.key] = item.translation ?? item.value ?? item.key
-                            }
-                            return (key, dict)
-
-                        } catch {
-                            return (key, nil)
-                        }
-                    }
+            
+            for key in response.allKeys {
+                let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"
+                
+                do {
+                    let dict = try await core.getFieldDictionary(
+                        type: type,
+                        fieldName: key,
+                        lang: "ru"
+                    )
+                    fieldDictionaries[key] = dict
+                } catch {
+                    continue
                 }
-
-                for await (key, dict) in group {
-                    if let dict { fieldDictionaries[key] = dict }
-                }
+               
             }
-
+            
         } catch {
             runtime.set(error: error, for: widget)
             table = .error(error)
         }
     }
+    
     
     @ViewBuilder
     private func buildTable(from response: QueryResponse) -> some View {

@@ -1,7 +1,7 @@
 import Foundation
 
 public struct WidgetFilter: Codable, Sendable {
-    public let period: PeriodWrapper?
+    public var period: PeriodWrapper?
     public let clauses: [Clause]?
     public let version: Int = 0
     
