@@ -4,6 +4,8 @@ import DashboardsCore
 
 @available(iOS 17.0, *)
 struct DonutChartView: View {
+    @EnvironmentObject private var core: DashboardsCore
+    
     let rows: [[String: AnyCodable]]
 
     var body: some View {
@@ -28,7 +30,7 @@ struct DonutChartView: View {
                             Circle()
                                 .fill(Color.accentColor.opacity(0.7))
                                 .frame(width: 14, height: 14)
-                            Text("\(item.0): \(item.1, specifier: "%.2f")")
+                            Text("\(item.0)")
                                 .font(.caption)
                         }
                     }
@@ -40,15 +42,25 @@ struct DonutChartView: View {
     }
 
     private func parseData() -> (xKey: String, yKey: String, data: [(String, Double)]) {
-        let xKey = rows.first?.keys.first(where: { $0.contains("time") || $0.contains("date") }) ?? rows.first?.keys.first ?? ""
-        let yKey = "count"
+           guard let firstRow = rows.first else {
+               return ("", "", [])
+           }
+           
+           let yKey = firstRow.keys.first(where: { key in
+               firstRow[key]?.doubleValue != nil
+           }) ?? "count"
+           
+           let xKey = firstRow.keys.first(where: { key in
+               key != yKey
+           }) ?? firstRow.keys.first ?? ""
 
-        let data: [(String, Double)] = rows.compactMap { row in
-            guard let y = row[yKey]?.doubleValue else { return nil }
-            let x = row[xKey]?.stringValue ?? "-"
-            return (x, y)
-        }
+           let data: [(String, Double)] = rows.compactMap { row in
+               guard let y = row[yKey]?.doubleValue else { return nil }
+               let rawValue = row[xKey]?.stringValue ?? "-"
+               let translatedValue = core.translateValue(fieldName: xKey, rawValue: rawValue)
+               return (translatedValue, y)
+           }
 
-        return (xKey, yKey, data)
-    }
+           return (xKey, yKey, data)
+       }
 }

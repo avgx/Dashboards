@@ -42,8 +42,14 @@ struct BarChartView: View {
     private func parseData() {
         guard let firstRow = rows.first else { return }
         
-        let detectedXKey = firstRow.keys.first(where: { $0.lowercased().contains("time") || $0.lowercased().contains("date") }) ?? firstRow.keys.first ?? ""
-        let detectedYKey = "count"
+        let detectedXKey = firstRow.keys.first(where: {
+            $0.lowercased().contains("time") || $0.lowercased().contains("date")
+        }) ?? firstRow.keys.first ?? ""
+        
+        let detectedYKey = firstRow.keys.first(where: { key in
+            guard key != detectedXKey else { return false }
+            return firstRow[key]?.doubleValue != nil
+        }) ?? "count"
         
         let parsed: [(String, Double)] = rows.compactMap { row in
             guard let y = row[detectedYKey]?.doubleValue else { return nil }

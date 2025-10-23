@@ -33,6 +33,10 @@ extension DashboardsAPI {
         )
     }
     
+    public static func shareToken() -> Request<ShareToken> {
+        Request(path: "/api/v1/ad-backend/user/share/token")
+    }
+    
     public static func connect() -> Request<Void> {
         Request(path: "")
     }

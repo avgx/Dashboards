@@ -29,7 +29,7 @@ struct ChartWidgetView: View {
                 Text("?")
                     .frame(maxWidth: .infinity)
             case .loading:
-                ProgressView()
+                LoadingView(message: "Loading widget...")
             case .success(let value):
                 ChartContentView(widget: widget, response: value)
             case .error(let error):
@@ -45,6 +45,7 @@ struct ChartWidgetView: View {
             do {
                 let response = try await core.queryWidgetData(widget: widget)
                 runtime.set(response: response, for: widget)
+                await core.preloadDictionaries(for: response)
                 chart = .success(response)
             } catch {
                 runtime.set(error: error, for: widget)

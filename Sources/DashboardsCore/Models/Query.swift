@@ -4,10 +4,10 @@ public struct Query: Codable {
     public let view: String?
     public let limit: Int?
     public let table: String?
-    public let fields: [QueryField]?
-    public let filter: WidgetFilter?
-    public let groupBy: [String]?
-    public let orderBy: [OrderBy]?
+    public var fields: [QueryField]?
+    public var filter: WidgetFilter?
+    public var groupBy: [String]?
+    public var orderBy: [OrderBy]?
     public let distinctOn: [QueryField]?
     public let joinSubquery: JoinSubquery?
 
@@ -32,18 +32,22 @@ public struct Query: Codable {
         self.distinctOn = distinctOn
         self.joinSubquery = joinSubquery
     }
-}
 
-extension Query: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        let encodedData = try? encoder.encode(self)
+    enum CodingKeys: String, CodingKey {
+        case view, limit, table, fields, filter, groupBy, orderBy, distinctOn, joinSubquery
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
         
-        if let encodedData, let jsonString = String(data: encodedData, encoding: .utf8) {
-            return "Query: \(jsonString)"
-        } else {
-            return "invalid"
-        }
+        try container.encodeIfPresent(view, forKey: .view)
+        try container.encodeIfPresent(limit, forKey: .limit)
+        try container.encodeIfPresent(table, forKey: .table)
+        try container.encodeIfPresent(fields, forKey: .fields)
+        try container.encodeIfPresent(filter, forKey: .filter)
+        try container.encodeIfPresent(groupBy, forKey: .groupBy)
+        try container.encodeIfPresent(orderBy, forKey: .orderBy)
+        try container.encodeIfPresent(distinctOn, forKey: .distinctOn)
+        try container.encodeIfPresent(joinSubquery, forKey: .joinSubquery)
     }
 }

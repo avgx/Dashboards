@@ -15,4 +15,9 @@ public enum Period: String, Codable, Sendable {
     case yesterday = "yesterday"
 }
 
-
+public enum PeriodTimeSeries: String, CaseIterable {
+    case day = "Day"
+    case week = "Week"
+    case month = "Month"
+    case year = "Year"
+}

@@ -3,6 +3,7 @@ import Get
 
 class DefaultNetworkService: NetworkServiceProtocol {
     private let client: HttpClient5
+    var baseURL: URL { client.baseURL }
     
     init(client: HttpClient5) {
         self.client = client
@@ -32,4 +33,8 @@ class DefaultNetworkService: NetworkServiceProtocol {
         try await client.send(DashboardsAPI.query(query: query))
     }
     
+    func fetchShareToken() async throws -> Response<ShareToken> {
+        try await client.send(DashboardsAPI.shareToken())
+    }
+
 }

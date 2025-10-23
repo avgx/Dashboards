@@ -1,6 +1,7 @@
 import SwiftUI
 import DashboardsCore
 
+
 @available(iOS 17.0, *)
 struct TableWidgetView: View {
     @EnvironmentObject private var core: DashboardsCore
@@ -10,7 +11,6 @@ struct TableWidgetView: View {
     @State private var table: Resource<QueryResponse> = .pending
     @State private var refresh = UUID()
     @State private var fontScale: CGFloat = 1.0
-    @State private var fieldDictionaries: [String: [String: String]] = [:]
     
     var body: some View {
         VStack(spacing: 12) {
@@ -53,7 +53,7 @@ struct TableWidgetView: View {
             case .pending:
                 Text("?").frame(maxWidth: .infinity)
             case .loading:
-                ProgressView()
+                LoadingView(message: "Loading widget data...")
             case .success(let response):
                 buildTable(from: response)
             case .error(let error):
@@ -71,47 +71,21 @@ struct TableWidgetView: View {
     
     private func loadData() async {
         table = .loading
-        fieldDictionaries = [:]
         
         do {
             let response = try await core.queryWidgetData(widget: widget)
             runtime.set(response: response, for: widget)
+            
+            await core.preloadDictionaries(for: response)
+            
             table = .success(response)
             
-            guard let eventFields = core.eventFields.value else { return }
-                        
-            await withTaskGroup(of: (String, [String: String]?).self) { group in
-                for key in response.allKeys {
-                    let type = eventFields.first(where: { $0.name == key })?.descriptor.type.rawValue ?? "set"
-                    group.addTask {
-                        do {
-                            let values = try await core.fetchFieldValues(
-                                type: type,
-                                fieldName: key,
-                                lang: "ru"
-                            )
-
-                            let dict = values.result.reduce(into: [String: String]()) { acc, item in
-                                acc[item.key] = item.translation ?? item.value ?? item.key
-                            }
-                            return (key, dict)
-
-                        } catch {
-                            return (key, nil)
-                        }
-                    }
-                }
-
-                for await (key, dict) in group {
-                    if let dict { fieldDictionaries[key] = dict }
-                }
-            }
-
         } catch {
             runtime.set(error: error, for: widget)
             table = .error(error)
         }
     }
+    
     
     @ViewBuilder
     private func buildTable(from response: QueryResponse) -> some View {
@@ -119,7 +93,7 @@ struct TableWidgetView: View {
         let keys = response.allKeys.prefix(5)
         
         if rows.isEmpty {
-            let noData = widget.visualization?.noDataValue ?? "Нет данных"
+            let noData = widget.visualization?.noDataValue ?? "No data available"
             
             ContentUnavailableView(noData, systemImage: "tray")
                 .foregroundColor(.secondary)
@@ -146,7 +120,7 @@ struct TableWidgetView: View {
                         HStack(spacing: 0) {
                             ForEach(keys, id: \.self) { key in
                                 let rawValue = rows[i][key]?.stringValue ?? "—"
-                                let displayValue = fieldDictionaries[key]?[rawValue] ?? rawValue
+                                let displayValue = core.translateValue(fieldName: key, rawValue: rawValue)
                                 
                                 Text(displayValue)
                                     .font(.system(size: 12 * fontScale))

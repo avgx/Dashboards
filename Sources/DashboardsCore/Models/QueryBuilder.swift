@@ -1,7 +1,7 @@
 import Foundation
 
-struct QueryBuilder {
-    static func build(from widgetQuery: WidgetQuery) -> Query {
+public struct QueryBuilder {
+    public static func build(from widgetQuery: WidgetQuery) -> Query {
         return Query(
             view: widgetQuery.view,
             limit: widgetQuery.limit,

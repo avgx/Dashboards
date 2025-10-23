@@ -1,7 +1,7 @@
 import Foundation
 
 public struct PeriodWrapper: Codable, Sendable {
-    public let type: Period?
+    public var type: Period?
     public let from: String?
     public let to: String?
     public let timeZone: String?
@@ -21,8 +21,8 @@ public struct PeriodWrapper: Codable, Sendable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(type, forKey: .type)
-        try container.encode(from, forKey: .from)
-        try container.encode(to, forKey: .to)
-        try container.encode(timeZone, forKey: .timeZone)
+        try container.encodeIfPresent(from, forKey: .from)
+        try container.encodeIfPresent(to, forKey: .to)
+        try container.encodeIfPresent(timeZone, forKey: .timeZone)
     }
 }

@@ -43,10 +43,17 @@ struct CounterWidgetView: View {
             do {
                 let response = try await core.queryWidgetData(widget: widget)
                 
-                guard let value = response.result.first?["count"] else {
+                guard let firstRow = response.result.first else {
                     throw DashboardsError.unexpectedResponse
                 }
-                guard value.isNumber else {
+                
+                let valueKey = firstRow.keys.first(where: { key in
+                    firstRow[key]?.doubleValue != nil
+                })
+                
+                guard let valueKey = valueKey,
+                      let value = firstRow[valueKey],
+                      value.isNumber else {
                     throw DashboardsError.unexpectedResponse
                 }
                 

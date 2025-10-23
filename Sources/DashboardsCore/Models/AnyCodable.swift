@@ -7,7 +7,10 @@ public struct AnyCodable: Codable, Sendable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        if let intValue = try? container.decode(Int.self) {
+        
+        if container.decodeNil() {
+            value = NSNull()
+        } else if let intValue = try? container.decode(Int.self) {
             value = intValue
         } else if let doubleValue = try? container.decode(Double.self) {
             value = doubleValue
@@ -28,6 +31,8 @@ public struct AnyCodable: Codable, Sendable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch value {
+        case is NSNull:
+            try container.encodeNil()
         case let intValue as Int:
             try container.encode(intValue)
         case let doubleValue as Double:
@@ -87,6 +92,8 @@ extension AnyCodable {
     /// хелпер для получения значения как String
     public var stringValue: String? {
             switch value {
+            case is NSNull:
+                return nil
             case let v as String:
                 return v
             case let v as Int:
