@@ -12,16 +12,12 @@ struct ChartContentView: View {
         switch widget.visualization?.chartType {
         case "Line":
             LineChartView(rows: response.result)
-                .environmentObject(core)
         case "Donut":
-            DonutChartView(rows: response.result)
-                .environmentObject(core)
+            DonutChartView(rows: response.result, response: response)
         case "Bar":
             BarChartView(rows: response.result)
-                .environmentObject(core)
         default:
             LineChartView(rows: response.result)
-                .environmentObject(core)
         }
     }
 }

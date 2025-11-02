@@ -58,7 +58,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "TOKEN"
-            value = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjMsIkNsaWVudElEIjoiNjY2MjZmZjlkM2QxODI3YjdmM2ZkODdlOTIzOTYxNGQiLCJUeXBlIjoiYWNjZXNzVG9rZW4iLCJWZXJzaW9uIjoidjIiLCJDcmVhdGVkQXQiOiIyMDI1LTExLTAxVDIxOjIzOjQ2LjYzMjIyODQyNloiLCJleHAiOjE3NjIxMTg2MjYsImlhdCI6MTc2MjAzMjIyNiwiaXNzIjoiQ2xvdWQifQ.73Cqo4-YcnFQ_k-xG2dhysOfK6IFa7gjq6McyX3bizU"
+            value = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjMsIkNsaWVudElEIjoiNjY2MjZmZjlkM2QxODI3YjdmM2ZkODdlOTIzOTYxNGQiLCJUeXBlIjoiYWNjZXNzVG9rZW4iLCJWZXJzaW9uIjoidjIiLCJDcmVhdGVkQXQiOiIyMDI1LTExLTA0VDE5OjA3OjM3Ljk2NTc4MTEzNFoiLCJleHAiOjE3NjIzNjk2NTcsImlhdCI6MTc2MjI4MzI1NywiaXNzIjoiQ2xvdWQifQ.8XL_TFCfgji6EuR8HM2KDe1UXCIjs0RYPuiBSCDTFAs"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

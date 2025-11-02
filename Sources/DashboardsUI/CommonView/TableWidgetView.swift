@@ -90,7 +90,7 @@ struct TableWidgetView: View {
     @ViewBuilder
     private func buildTable(from response: QueryResponse) -> some View {
         let rows = response.result
-        let keys = response.allKeys.prefix(5)
+        let keys = response.orderedKeys.prefix(5)
         
         if rows.isEmpty {
             let noData = widget.visualization?.noDataValue ?? "No data available"
@@ -120,7 +120,13 @@ struct TableWidgetView: View {
                         HStack(spacing: 0) {
                             ForEach(keys, id: \.self) { key in
                                 let rawValue = rows[i][key]?.stringValue ?? "—"
-                                let displayValue = core.translateValue(fieldName: key, rawValue: rawValue)
+                                let displayValue: String = {
+                                    if response.isDateKey(key), let formattedDate = response.formatDateValue(rawValue) {
+                                        return formattedDate
+                                    } else {
+                                        return core.translateValue(fieldName: key, rawValue: rawValue)
+                                    }
+                                }()
                                 
                                 Text(displayValue)
                                     .font(.system(size: 12 * fontScale))

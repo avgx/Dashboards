@@ -13,9 +13,7 @@ struct BarChartView: View {
     var body: some View {
         VStack {
             if data.isEmpty {
-                Text("Нет данных для отображения")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, minHeight: 180)
+               EmptyView(message: "No data available...")
             } else {
                 Chart(data, id: \.0) { item in
                     BarMark(
@@ -53,7 +51,28 @@ struct BarChartView: View {
         
         let parsed: [(String, Double)] = rows.compactMap { row in
             guard let y = row[detectedYKey]?.doubleValue else { return nil }
-            let x = row[detectedXKey]?.stringValue ?? "-"
+            let xRaw = row[detectedXKey]?.stringValue ?? "-"
+            
+            let x: String
+            if detectedXKey.lowercased().contains("date") || 
+               detectedXKey.lowercased().contains("time") ||
+               detectedXKey.lowercased().contains("hour") ||
+               detectedXKey.lowercased().contains("month"),
+               let date = QueryResponse.parseDate(from: xRaw) {
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "ru_RU")
+                if detectedXKey.lowercased().contains("hour") {
+                    formatter.dateFormat = "HH:mm"
+                } else if detectedXKey.lowercased().contains("month") {
+                    formatter.dateFormat = "MMM"
+                } else {
+                    formatter.dateFormat = "dd.MM"
+                }
+                x = formatter.string(from: date)
+            } else {
+                x = xRaw
+            }
+            
             return (x, y)
         }
         

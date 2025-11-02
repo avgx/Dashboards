@@ -15,59 +15,56 @@ struct TimeSeriesChartWidgetView: View {
     @State private var refresh = UUID()
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(widget.title)
-                    .foregroundColor(.black)
-                
-                Spacer()
-                
-                Picker("Period", selection: $selectedPeriod) {
-                    ForEach(PeriodTimeSeries.allCases, id: \.self) { period in
-                        Text(period.rawValue.uppercased())
-                            .font(.caption)
-                            .tag(period)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(widget.title)
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                    
+                    Picker("Period", selection: $selectedPeriod) {
+                        ForEach(PeriodTimeSeries.allCases, id: \.self) { period in
+                            Text(period.rawValue.uppercased())
+                                .font(.caption)
+                                .tag(period)
+                        }
                     }
+                    .pickerStyle(.segmented)
+                    .frame(width: 260)
+                    .onChange(of: selectedPeriod) { _ in refresh = UUID() }
                 }
-                .pickerStyle(.segmented)
-                .frame(width: 260)
-                .onChange(of: selectedPeriod) { _ in refresh = UUID() }
-            }
-            
-            if case .success(let tables) = core.eventTables {
-                Picker("Table", selection: $selectedTable) {
-                    Text("Select table").tag(Optional<EventTable>.none)
-                    ForEach(tables, id: \.name) { table in
-                        Text(table.description)
-                            .tag(Optional(table))
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("All")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Text(totalValue)
+                        .font(.system(size: 40, weight: .semibold))
+                        .foregroundColor(.purple.opacity(0.9))
+                    
+                    Group {
+                        if case .success(let response) = chart,
+                           let yearMonth = getYearMonthLabel(for: response, period: selectedPeriod) {
+                            Text(yearMonth)
+                                .font(.headline)
+                                .foregroundColor(.black.opacity(0.8))
+                        } else {
+                            Text(periodLabel)
+                                .font(.headline)
+                                .foregroundColor(.black.opacity(0.8))
+                        }
                     }
-                }
-                .onChange(of: selectedTable) { _ in refresh = UUID() }
-                .frame(maxWidth: 180)
-            } else {
-                LoadingView(message: "Loading tables...")
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text("All")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                
-                Text(totalValue)
-                    .font(.system(size: 40, weight: .semibold))
-                    .foregroundColor(.purple.opacity(0.9))
-                
-                Text(periodLabel)
-                    .font(.headline)
-                    .foregroundColor(.black.opacity(0.8))
                     .padding(.bottom, 4)
+                }
+                
+                content
+                    .frame(height: 260)
             }
-            
-            content
-                .frame(height: 260)
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .cornerRadius(24)
         .shadow(color: .black.opacity(0.4), radius: 10, x: 0, y: 4)
         .task(id: refresh) { await fetchData() }
@@ -76,8 +73,8 @@ struct TimeSeriesChartWidgetView: View {
         
     private var totalValue: String {
         if case .success(let response) = chart,
-           let result = response.result as? [[String: AnyCodable]],
-           let firstRow = result.first {
+           let firstRow = response.result.first {
+            let result = response.result
             
             let xKey = firstRow.keys.first(where: {
                 $0.lowercased().contains("time") || $0.lowercased().contains("date") || $0.lowercased().contains("hour") || $0.lowercased().contains("month")
@@ -115,7 +112,8 @@ struct TimeSeriesChartWidgetView: View {
                 LoadingView(message: "Loading Data...")
                 
             case .success(let response):
-                if let result = response.result as? [[String: AnyCodable]], !result.isEmpty {
+                let result = response.result
+                if !result.isEmpty {
                     let firstRow = result.first!
                     
                     let xKey = firstRow.keys.first(where: {
@@ -136,8 +134,7 @@ struct TimeSeriesChartWidgetView: View {
                     }
                     
                     if data.isEmpty {
-                        Text("No data available")
-                            .foregroundColor(.gray)
+                        EmptyView(message: "No data available...")
                     } else {
                         Chart(data, id: \.x) { item in
                             BarMark(
@@ -157,7 +154,7 @@ struct TimeSeriesChartWidgetView: View {
                                         Text(raw)
                                             .font(.caption2)
                                             .foregroundColor(.gray)
-                                            .rotationEffect(.degrees(45))
+                                            .rotationEffect(.degrees(-90))
                                             .frame(width: 40, alignment: .leading)
                                     }
                                 }
@@ -165,8 +162,7 @@ struct TimeSeriesChartWidgetView: View {
                         }
                     }
                 } else {
-                    Text("No data available")
-                        .foregroundColor(.gray)
+                    EmptyView(message: "No data available...")
                 }
                 
             case .error(let error):
@@ -180,33 +176,12 @@ struct TimeSeriesChartWidgetView: View {
     
     
     private func formatXLabel(_ raw: String, for period: PeriodTimeSeries) -> String {
-        let df = DateFormatter()
-        df.locale = Locale(identifier: "en_US_POSIX")
-        
-        var date: Date?
-        
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withTimeZone]
-        date = isoFormatter.date(from: raw)
-        
-        if date == nil {
-            isoFormatter.formatOptions = [.withInternetDateTime]
-            date = isoFormatter.date(from: raw)
-        }
-        
-        if date == nil {
-            df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-            date = df.date(from: raw)
-        }
-        
-        if date == nil {
-            df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            date = df.date(from: raw)
-        }
-        
-        guard let date = date else {
+        guard let date = QueryResponse.parseDate(from: raw) else {
             return raw
         }
+        
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "ru_RU")
         
         switch period {
         case .day:
@@ -222,6 +197,49 @@ struct TimeSeriesChartWidgetView: View {
             df.dateFormat = "MMM"
             return df.string(from: date)
         }
+    }
+    
+    private func getYearMonthLabel(for response: QueryResponse, period: PeriodTimeSeries) -> String? {
+        guard period == .month else {
+            return nil
+        }
+        
+        let result = response.result
+        guard !result.isEmpty else {
+            return nil
+        }
+        
+        let firstRow = result.first!
+        let xKey = firstRow.keys.first(where: {
+            $0.lowercased().contains("time") || $0.lowercased().contains("date")
+        }) ?? ""
+        
+        guard !xKey.isEmpty else { return nil }
+        
+        let dates = result.compactMap { row -> Date? in
+            guard let raw = row[xKey]?.stringValue else { return nil }
+            return QueryResponse.parseDate(from: raw)
+        }
+        
+        guard let firstDate = dates.first, let lastDate = dates.last else { return nil }
+        
+        let calendar = Calendar.current
+        let firstMonth = calendar.component(.month, from: firstDate)
+        let firstYear = calendar.component(.year, from: firstDate)
+        let lastMonth = calendar.component(.month, from: lastDate)
+        let lastYear = calendar.component(.year, from: lastDate)
+        
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "ru_RU")
+        df.dateFormat = "MMMM yyyy"
+        
+        if firstMonth == lastMonth && firstYear == lastYear {
+            return df.string(from: firstDate)
+        }
+        
+        let firstStr = df.string(from: firstDate)
+        let lastStr = df.string(from: lastDate)
+        return "\(firstStr) - \(lastStr)"
     }
         
     private func fetchData() async {

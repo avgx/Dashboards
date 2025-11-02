@@ -7,6 +7,7 @@ struct DonutChartView: View {
     @EnvironmentObject private var core: DashboardsCore
     
     let rows: [[String: AnyCodable]]
+    let response: QueryResponse
 
     var body: some View {
         let (_, _, data) = parseData()
@@ -26,6 +27,9 @@ struct DonutChartView: View {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(data, id: \.0) { item in
+                        
+                        
+                        
                         HStack(spacing: 6) {
                             Circle()
                                 .fill(Color.accentColor.opacity(0.7))
@@ -42,25 +46,31 @@ struct DonutChartView: View {
     }
 
     private func parseData() -> (xKey: String, yKey: String, data: [(String, Double)]) {
-           guard let firstRow = rows.first else {
-               return ("", "", [])
-           }
-           
-           let yKey = firstRow.keys.first(where: { key in
-               firstRow[key]?.doubleValue != nil
-           }) ?? "count"
-           
-           let xKey = firstRow.keys.first(where: { key in
-               key != yKey
-           }) ?? firstRow.keys.first ?? ""
+        guard let firstRow = rows.first else {
+            return ("", "", [])
+        }
+        
+        let yKey = firstRow.keys.first(where: { key in
+            firstRow[key]?.doubleValue != nil
+        }) ?? "count"
+        
+        let xKey = firstRow.keys.first(where: { key in
+            key != yKey
+        }) ?? firstRow.keys.first ?? ""
 
-           let data: [(String, Double)] = rows.compactMap { row in
-               guard let y = row[yKey]?.doubleValue else { return nil }
-               let rawValue = row[xKey]?.stringValue ?? "-"
-               let translatedValue = core.translateValue(fieldName: xKey, rawValue: rawValue)
-               return (translatedValue, y)
-           }
+        let data: [(String, Double)] = rows.compactMap { row in
+            guard let y = row[yKey]?.doubleValue else { return nil }
+            let rawValue = row[xKey]?.stringValue ?? "-"
+            let displayValue: String = {
+                if response.isDateKey(xKey), let formattedDateTime = response.formatDateTimeValue(rawValue) {
+                    return formattedDateTime
+                } else {
+                    return core.translateValue(fieldName: xKey, rawValue: rawValue)
+                }
+            }()
+            return (displayValue, y)
+        }
 
-           return (xKey, yKey, data)
-       }
+        return (xKey, yKey, data)
+    }
 }

@@ -24,10 +24,11 @@ public struct DashboardsUI: View {
             }
             
             NavigationStack {
-                TimeChartTabView()
+                SummaryView()
+                    .environmentObject(core)
             }
             .tabItem {
-                Label("Time Chart", systemImage: "chart.bar.xaxis")
+                Label("Summary", systemImage: "target")
             }
         }
     }
